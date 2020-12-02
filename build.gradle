@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'io.danielhuisman'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:18.0'
+    implementation 'org.apache.commons:commons-lang3:3.3.1'
+    implementation 'org.sat4j:org.sat4j.core:2.3.1'
+    implementation name: 'symbolicautomata-1.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
