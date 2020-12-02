@@ -20,6 +20,10 @@ public class SFAWrapper {
 
     private final SFA<CharPred, Character> sfa;
 
+    public SFAWrapper(SFA<CharPred, Character> sfa) {
+        this.sfa = sfa;
+    }
+
     public SFAWrapper(Collection<SFAMove<CharPred, Character>> transitions, Integer initialState, Collection<Integer> finalStates) throws TimeoutException {
         this.sfa = SFA.MkSFA(transitions, initialState, finalStates, ALGEBRA);
     }
@@ -46,20 +50,36 @@ public class SFAWrapper {
     public void createDotFile(String fileName) throws IOException {
         Files.createDirectories(Paths.get("dot"));
 
-        sfa.createDotFile(fileName, "dot/");
+        getSFA().createDotFile(fileName, "dot/");
     }
 
     public void createDotFile(String fileName, String path) throws IOException {
         Files.createDirectories(Paths.get("dot/" + path));
 
-        sfa.createDotFile(fileName, "dot/" + path);
+        getSFA().createDotFile(fileName, "dot/" + path);
     }
 
     public boolean accepts(List<Character> input) throws TimeoutException {
-        return sfa.accepts(input, ALGEBRA);
+        return getSFA().accepts(input, ALGEBRA);
     }
 
     public boolean accepts(String input) throws TimeoutException {
         return accepts(input.chars().mapToObj(c -> (char) c).collect(Collectors.toList()));
+    }
+
+    public SFAWrapper complement() throws TimeoutException {
+        return new SFAWrapper(getSFA().complement(ALGEBRA));
+    }
+
+    public SFAWrapper minimize() throws TimeoutException {
+        return new SFAWrapper(getSFA().minimize(ALGEBRA));
+    }
+
+    public SFAWrapper unionWith(SFAWrapper other) throws TimeoutException {
+        return new SFAWrapper(getSFA().unionWith(other.getSFA(), ALGEBRA));
+    }
+
+    public SFAWrapper intersectionWith(SFAWrapper other) throws TimeoutException {
+        return new SFAWrapper(getSFA().intersectionWith(other.getSFA(), ALGEBRA));
     }
 }
