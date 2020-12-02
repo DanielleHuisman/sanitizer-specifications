@@ -94,13 +94,13 @@ public class TestGeneratorWord {
                 String inputValid = prefix + match + postfix;
                 String inputInvalid = prefix + "q" + postfix;
 
-                assertFalse(sfa.accepts(inputValid), String.format("Contains \"%s\" should not accept string \"%s\"", match, inputValid));
+                assertFalse(sfa.accepts(inputValid), String.format("Not contains \"%s\" should not accept string \"%s\"", match, inputValid));
 
                 // Handle not contains empty string
                 if (match.length() == 0) {
-                    assertFalse(sfa.accepts(inputInvalid), String.format("Contains \"%s\" should not accept string \"%s\"", match, inputInvalid));
+                    assertFalse(sfa.accepts(inputInvalid), String.format("Not contains \"%s\" should not accept string \"%s\"", match, inputInvalid));
                 } else {
-                    assertTrue(sfa.accepts(inputInvalid), String.format("Contains \"%s\" should accept string \"%s\"", match, inputInvalid));
+                    assertTrue(sfa.accepts(inputInvalid), String.format("Not contains \"%s\" should accept string \"%s\"", match, inputInvalid));
                 }
             }
         }

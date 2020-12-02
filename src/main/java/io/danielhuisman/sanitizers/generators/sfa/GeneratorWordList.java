@@ -10,7 +10,6 @@ import java.util.List;
 
 public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator, Collection<String>>> {
 
-
     private final GeneratorWord generatorWord;
 
     public GeneratorWordList() {
