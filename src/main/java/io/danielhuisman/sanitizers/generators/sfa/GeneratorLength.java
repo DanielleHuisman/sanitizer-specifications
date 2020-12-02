@@ -61,11 +61,10 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
     public static void main(String[] args) throws IOException, TimeoutException {
         GeneratorLength generator = new GeneratorLength();
 
-        SFAWrapper sfa;
         for (Operator operator : Operator.values()) {
             String name = operator.name().toLowerCase() + "_0";
 
-            sfa = generator.generate(Pair.of(operator, 0));
+            SFAWrapper sfa = generator.generate(Pair.of(operator, 0));
             sfa.createDotFile(name, "length/");
 
             System.out.println(name);
