@@ -18,9 +18,9 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
         EQUALS,
         NOT_EQUALS,
         LESS_THAN,
-        LESS_THAN_OR_EQUAL,
+        LESS_THAN_OR_EQUALS,
         GREATER_THAN,
-        GREATER_THAN_OR_EQUAL
+        GREATER_THAN_OR_EQUALS
     }
 
     @Override
@@ -36,19 +36,19 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
             transitions.add(new SFAInputMove<>(i, i + 1, SFAWrapper.ALGEBRA.True()));
         }
 
-        if (operator == Operator.EQUALS || operator == Operator.LESS_THAN_OR_EQUAL || operator == Operator.GREATER_THAN_OR_EQUAL) {
+        if (operator == Operator.EQUALS || operator == Operator.LESS_THAN_OR_EQUALS || operator == Operator.GREATER_THAN_OR_EQUALS) {
             // Mark length state as final
             finalStates.add(length);
         }
 
-        if (operator == Operator.NOT_EQUALS || operator == Operator.LESS_THAN || operator == Operator.LESS_THAN_OR_EQUAL) {
+        if (operator == Operator.NOT_EQUALS || operator == Operator.LESS_THAN || operator == Operator.LESS_THAN_OR_EQUALS) {
             // Mark all states except length as final
             for (int i = 0; i < length; i++) {
                 finalStates.add(i);
             }
         }
 
-        if (operator == Operator.NOT_EQUALS || operator == Operator.GREATER_THAN || operator == Operator.GREATER_THAN_OR_EQUAL) {
+        if (operator == Operator.NOT_EQUALS || operator == Operator.GREATER_THAN || operator == Operator.GREATER_THAN_OR_EQUALS) {
             // Add final state after length with transition to self
             finalStates.add(length + 1);
             transitions.add(new SFAInputMove<>(length, length + 1, SFAWrapper.ALGEBRA.True()));
@@ -63,12 +63,14 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
 
         SFAWrapper sfa;
         for (Operator operator : Operator.values()) {
-            String name = operator.name().toLowerCase() + "_3";
+            String name = operator.name().toLowerCase() + "_0";
 
-            sfa = generator.generate(Pair.of(operator, 3));
+            sfa = generator.generate(Pair.of(operator, 0));
             sfa.createDotFile(name, "length/");
 
             System.out.println(name);
+            System.out.println("0: " + sfa.accepts(""));
+            System.out.println("1: " + sfa.accepts("a"));
             System.out.println("2: " + sfa.accepts("aa"));
             System.out.println("3: " + sfa.accepts("abc"));
             System.out.println("4: " + sfa.accepts("fghj"));
