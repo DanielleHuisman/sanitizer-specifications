@@ -55,7 +55,7 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
             transitions.add(new SFAInputMove<>(length + 1, length + 1, SFAWrapper.ALGEBRA.True()));
         }
 
-        return new SFAWrapper(transitions, 0, finalStates);
+        return new SFAWrapper(transitions, 0, finalStates, false);
     }
 
     public static void main(String[] args) throws IOException, TimeoutException {

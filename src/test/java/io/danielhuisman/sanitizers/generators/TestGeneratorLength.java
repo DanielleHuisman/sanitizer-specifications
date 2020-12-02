@@ -16,10 +16,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testEquals() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.EQUALS, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.EQUALS, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j == i) {
@@ -33,10 +33,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testNotEquals() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.NOT_EQUALS, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.NOT_EQUALS, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j != i) {
@@ -50,10 +50,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testLessThan() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.LESS_THAN, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.LESS_THAN, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j < i) {
@@ -67,10 +67,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testLessThanOrEquals() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j <= i) {
@@ -84,10 +84,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testGreaterThan() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j > i) {
@@ -101,10 +101,10 @@ public class TestGeneratorLength {
 
     @Test
     public void testGreaterThanOrEquals() throws TimeoutException {
-        GeneratorLength generatorLength = new GeneratorLength();
+        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
-            SFAWrapper sfa = generatorLength.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, i));
+            SFAWrapper sfa = generator.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, i));
 
             for (int j = 0; j <= SIZE; j++) {
                 if (j >= i) {
