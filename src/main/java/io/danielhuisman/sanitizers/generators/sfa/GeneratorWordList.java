@@ -4,8 +4,8 @@ import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 
-import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator, Collection<String>>> {
@@ -14,6 +14,11 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
 
     public GeneratorWordList() {
         generatorWord = new GeneratorWord();
+    }
+
+    @Override
+    public String getName() {
+        return "word-list";
     }
 
     @Override
@@ -46,15 +51,18 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
         return combinedSfa.minimize();
     }
 
-    public static void main(String[] args) throws IOException, TimeoutException {
-        GeneratorWordList generator = new GeneratorWordList();
+    @Override
+    public Collection<Pair<String, SFAWrapper>> generateExamples() throws TimeoutException {
+        List<Pair<String, SFAWrapper>> examples = new LinkedList<>();
 
-        SFAWrapper sfa = generator.generate(Pair.of(GeneratorWord.Operator.NOT_EQUALS, List.of("abc", "def")));
-        sfa.createDotFile("combined", "word-list/");
+        List<String> words = List.of("abc", "def");
 
-        System.out.println("abc: " + sfa.accepts("abc"));
-        System.out.println("def: " + sfa.accepts("def"));
-        System.out.println("qabcdefz: " + sfa.accepts("qabcdefz"));
-        System.out.println("qed: " + sfa.accepts("qed"));
+        // Generate SFAs for all operators with "abc" and "def"
+        for (GeneratorWord.Operator operator : GeneratorWord.Operator.values()) {
+            String name = operator.name().toLowerCase();
+            examples.add(Pair.of(name, generate(Pair.of(operator, words))));
+        }
+
+        return examples;
     }
 }

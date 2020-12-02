@@ -16,6 +16,7 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:18.0'
     implementation 'org.apache.commons:commons-lang3:3.3.1'
+    implementation 'org.reflections:reflections:0.9.12'
     implementation 'org.sat4j:org.sat4j.core:2.3.1'
     implementation name: 'symbolicautomata-1.0'
 

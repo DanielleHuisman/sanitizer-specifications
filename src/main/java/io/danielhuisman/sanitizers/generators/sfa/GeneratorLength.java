@@ -7,10 +7,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import theory.characters.CharPred;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator, Integer>> {
 
@@ -21,6 +21,11 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
         LESS_THAN_OR_EQUALS,
         GREATER_THAN,
         GREATER_THAN_OR_EQUALS
+    }
+
+    @Override
+    public String getName() {
+        return "length";
     }
 
     @Override
@@ -58,22 +63,16 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
         return new SFAWrapper(transitions, 0, finalStates, false);
     }
 
-    public static void main(String[] args) throws IOException, TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
+    @Override
+    public Collection<Pair<String, SFAWrapper>> generateExamples() throws TimeoutException {
+        List<Pair<String, SFAWrapper>> examples = new LinkedList<>();
 
+        // Generate SFAs for all operators with length 3
         for (Operator operator : Operator.values()) {
-            String name = operator.name().toLowerCase() + "_0";
-
-            SFAWrapper sfa = generator.generate(Pair.of(operator, 0));
-            sfa.createDotFile(name, "length/");
-
-            System.out.println(name);
-            System.out.println("0: " + sfa.accepts(""));
-            System.out.println("1: " + sfa.accepts("a"));
-            System.out.println("2: " + sfa.accepts("aa"));
-            System.out.println("3: " + sfa.accepts("abc"));
-            System.out.println("4: " + sfa.accepts("fghj"));
-            System.out.println();
+            String name = operator.name().toLowerCase() + "_3";
+            examples.add(Pair.of(name, generate(Pair.of(operator, 3))));
         }
+
+        return examples;
     }
 }

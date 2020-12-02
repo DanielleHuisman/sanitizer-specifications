@@ -7,10 +7,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import theory.characters.CharPred;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, String>> {
 
@@ -19,6 +19,11 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
         NOT_EQUALS,
         CONTAINS,
         NOT_CONTAINS
+    }
+
+    @Override
+    public String getName() {
+        return "word";
     }
 
     @Override
@@ -71,32 +76,20 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
         return new SFAWrapper(transitions, 0, finalStates, false);
     }
 
-    public static void main(String[] args) throws IOException, TimeoutException {
-        GeneratorWord generator = new GeneratorWord();
+    @Override
+    public Collection<Pair<String, SFAWrapper>> generateExamples() throws TimeoutException {
+        List<Pair<String, SFAWrapper>> examples = new LinkedList<>();
 
-        String[] words = new String[] {"aa", "vck", "<script>"};
-        for (String word : words) {
-            SFAWrapper sfa = generator.generate(Pair.of(Operator.NOT_CONTAINS, word));
-            sfa.createDotFile(word, "word/");
+        List<String> words = List.of("abc", "<script>");
 
-            System.out.println(word);
-            System.out.println(sfa.accepts("test"));
-            System.out.println(sfa.accepts(word));
-            System.out.println(sfa.accepts(word + "2"));
-            System.out.println();
-        }
-
+        // Generate SFAs for all operators for all words
         for (Operator operator : Operator.values()) {
-            String name = operator.name().toLowerCase() + "_abc";
-
-            SFAWrapper sfa = generator.generate(Pair.of(operator, "abc"));
-            sfa.createDotFile(name, "word/");
-
-            System.out.println(name);
-            System.out.println("aa: " + sfa.accepts("aa"));
-            System.out.println("abc: " + sfa.accepts("abc"));
-            System.out.println("qabcq: " + sfa.accepts("qabcq"));
-            System.out.println();
+            for (String word : words) {
+                String name = operator.name().toLowerCase() + "_" + word;
+                examples.add(Pair.of(name, generate(Pair.of(operator, word))));
+            }
         }
+
+        return examples;
     }
 }
