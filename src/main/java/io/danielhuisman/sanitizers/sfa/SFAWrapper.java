@@ -82,4 +82,36 @@ public class SFAWrapper {
     public SFAWrapper intersectionWith(SFAWrapper other) throws TimeoutException {
         return new SFAWrapper(getSFA().intersectionWith(other.getSFA(), ALGEBRA));
     }
+
+    public static SFAWrapper union(Collection<SFAWrapper> sfas) throws TimeoutException {
+        if (sfas.size() == 0) {
+            throw new RuntimeException("At least one SFA must be provided.");
+        }
+
+        SFAWrapper result = null;
+        for (SFAWrapper sfa : sfas) {
+            if (result == null) {
+                result = sfa;
+            } else {
+                result = result.unionWith(sfa);
+            }
+        }
+        return result.minimize();
+    }
+
+    public static SFAWrapper intersection(Collection<SFAWrapper> sfas) throws TimeoutException {
+        if (sfas.size() == 0) {
+            throw new RuntimeException("At least one SFA must be provided.");
+        }
+
+        SFAWrapper result = null;
+        for (SFAWrapper sfa : sfas) {
+            if (result == null) {
+                result = sfa;
+            } else {
+                result = result.intersectionWith(sfa);
+            }
+        }
+        return result.minimize();
+    }
 }
