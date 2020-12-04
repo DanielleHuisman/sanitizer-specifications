@@ -9,18 +9,18 @@ import org.sat4j.specs.TimeoutException;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGeneratorWordList {
 
     private static final String[] WORDS = {"a", "abc", "</script>", "#abc9ee", "456", ""};
 
+    private final GeneratorWordList generator = new GeneratorWordList();
+
     @Test
     public void testEquals() throws TimeoutException {
-        GeneratorWordList generator = new GeneratorWordList();
-
         for (int i = 0; i <= WORDS.length; i++) {
             Collection<String> match = Arrays.asList(WORDS).subList(0, i);
             var matchInput = Pair.of(GeneratorWord.Operator.EQUALS, match);
@@ -40,8 +40,6 @@ public class TestGeneratorWordList {
 
     @Test
     public void testNotEquals() throws TimeoutException {
-        GeneratorWordList generator = new GeneratorWordList();
-
         for (int i = 0; i <= WORDS.length; i++) {
             Collection<String> match = Arrays.asList(WORDS).subList(0, i);
             var matchInput = Pair.of(GeneratorWord.Operator.NOT_EQUALS, match);
@@ -61,8 +59,6 @@ public class TestGeneratorWordList {
 
     @Test
     public void testContains () throws TimeoutException {
-        GeneratorWordList generator = new GeneratorWordList();
-
         for (int i = 0; i <= WORDS.length; i++) {
             Collection<String> match = Arrays.asList(WORDS).subList(0, i);
             var matchInput = Pair.of(GeneratorWord.Operator.CONTAINS, match);
@@ -81,8 +77,6 @@ public class TestGeneratorWordList {
 
     @Test
     public void testNotContains () throws TimeoutException {
-        GeneratorWordList generator = new GeneratorWordList();
-
         for (int i = 0; i <= WORDS.length; i++) {
             Collection<String> match = Arrays.asList(WORDS).subList(0, i);
             var matchInput = Pair.of(GeneratorWord.Operator.NOT_CONTAINS, match);
@@ -98,4 +92,16 @@ public class TestGeneratorWordList {
             }
         }
     }
+
+    @Test
+    public void testFormat() {
+        assertEquals("contains [\"abc\"]", generator.format(Pair.of(GeneratorWord.Operator.CONTAINS, List.of("abc"))));
+        assertEquals("equals [\"</script>\", \" def\\\"\"]", generator.format(Pair.of(GeneratorWord.Operator.EQUALS, List.of("</script>", " def\""))));
+    }
+
+//    @Test
+//    public void testParse() {
+//        assertEquals(Pair.of(GeneratorWord.Operator.CONTAINS, List.of("abc")), generator.parse("contains [\"abc\"]"));
+//        assertEquals(Pair.of(GeneratorWord.Operator.EQUALS, List.of("</script>", " def\"")), generator.parse("equals [\"</script>\", \" def\\\"\"]"));
+//    }
 }

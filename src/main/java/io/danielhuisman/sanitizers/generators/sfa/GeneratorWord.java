@@ -3,6 +3,7 @@ package io.danielhuisman.sanitizers.generators.sfa;
 import automata.sfa.SFAInputMove;
 import automata.sfa.SFAMove;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import theory.characters.CharPred;
@@ -92,7 +93,7 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
 
     @Override
     public String format(Pair<Operator, String> input) {
-        return String.format("%s \"%s\"", input.getLeft().name().toLowerCase(), input.getRight());
+        return String.format("%s \"%s\"", input.getLeft().name().toLowerCase(), StringEscapeUtils.escapeJava(input.getRight()));
     }
 
     @Override
@@ -101,8 +102,7 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
         if (split.length == 2) {
             Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
             if (operator.isPresent()) {
-                // TODO: parse string properly with quotes etc
-                return Pair.of(operator.get(), split[1]);
+                return Pair.of(operator.get(), StringEscapeUtils.unescapeJava(split[1].substring(1, split[1].length() - 1)));
             }
         }
         return null;

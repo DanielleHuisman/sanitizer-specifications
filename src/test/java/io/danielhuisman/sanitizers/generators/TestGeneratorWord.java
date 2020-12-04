@@ -7,17 +7,16 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.sat4j.specs.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGeneratorWord {
 
     private static final int SIZE = 10;
 
+    private final GeneratorWord generator = new GeneratorWord();
+
     @Test
     public void testEquals() throws TimeoutException {
-        GeneratorWord generator = new GeneratorWord();
-
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
             var matchInput = Pair.of(GeneratorWord.Operator.EQUALS, match);
@@ -37,8 +36,6 @@ public class TestGeneratorWord {
 
     @Test
     public void testNotEquals() throws TimeoutException {
-        GeneratorWord generator = new GeneratorWord();
-
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
             var matchInput = Pair.of(GeneratorWord.Operator.NOT_EQUALS, match);
@@ -58,8 +55,6 @@ public class TestGeneratorWord {
 
     @Test
     public void testContains() throws TimeoutException {
-        GeneratorWord generator = new GeneratorWord();
-
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
             var matchInput = Pair.of(GeneratorWord.Operator.CONTAINS, match);
@@ -85,8 +80,6 @@ public class TestGeneratorWord {
 
     @Test
     public void testNotContains() throws TimeoutException {
-        GeneratorWord generator = new GeneratorWord();
-
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
             var matchInput = Pair.of(GeneratorWord.Operator.NOT_CONTAINS, match);
@@ -108,5 +101,19 @@ public class TestGeneratorWord {
                 }
             }
         }
+    }
+
+    @Test
+    public void testFormat() {
+        assertEquals("equals \"abc\"", generator.format(Pair.of(GeneratorWord.Operator.EQUALS, "abc")));
+        assertEquals("not_equals \" </script>\"", generator.format(Pair.of(GeneratorWord.Operator.NOT_EQUALS, " </script>")));
+        assertEquals("not_contains \"'\\\"' \\n\\\\n\"", generator.format(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, "'\"' \n\\n")));
+    }
+
+    @Test
+    public void testParse() {
+        assertEquals(Pair.of(GeneratorWord.Operator.EQUALS, "abc"), generator.parse("equals \"abc\""));
+        assertEquals(Pair.of(GeneratorWord.Operator.NOT_EQUALS, " </script>"), generator.parse("not_equals \" </script>\""));
+        assertEquals(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, "'\"' \n\\n"), generator.parse("not_contains \"'\\\"' \\n\\\\n\""));
     }
 }

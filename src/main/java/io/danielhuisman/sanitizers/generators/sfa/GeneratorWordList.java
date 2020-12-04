@@ -2,6 +2,7 @@ package io.danielhuisman.sanitizers.generators.sfa;
 
 import io.danielhuisman.sanitizers.Util;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 
@@ -63,7 +64,9 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
 
     @Override
     public String format(Pair<GeneratorWord.Operator, Collection<String>> input) {
-        return String.format("%s [%s]", input.getLeft().name().toLowerCase(), String.join(", ", input.getRight()));
+        return String.format("%s [%s]", input.getLeft().name().toLowerCase(), input.getRight()
+                .stream()
+                .map(s -> String.format("\"%s\"", StringEscapeUtils.escapeJava(s))).collect(Collectors.joining(", ")));
     }
 
     @Override

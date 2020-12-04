@@ -13,9 +13,10 @@ public class TestGeneratorLength {
 
     private static final int SIZE = 10;
 
+    private final GeneratorLength generator = new GeneratorLength();
+
     @Test
     public void testEquals() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
 
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.EQUALS, i);
@@ -35,8 +36,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testNotEquals() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.NOT_EQUALS, i);
             SFAWrapper sfa = generator.generate(match);
@@ -55,8 +54,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testLessThan() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.LESS_THAN, i);
             SFAWrapper sfa = generator.generate(match);
@@ -75,8 +72,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testLessThanOrEquals() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, i);
             SFAWrapper sfa = generator.generate(match);
@@ -95,8 +90,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testGreaterThan() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.GREATER_THAN, i);
             SFAWrapper sfa = generator.generate(match);
@@ -115,8 +108,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testGreaterThanOrEquals() throws TimeoutException {
-        GeneratorLength generator = new GeneratorLength();
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, i);
             SFAWrapper sfa = generator.generate(match);
@@ -135,16 +126,12 @@ public class TestGeneratorLength {
 
     @Test
     public void testFormat() {
-        GeneratorLength generator = new GeneratorLength();
-
         assertEquals("equals 3", generator.format(Pair.of(GeneratorLength.Operator.EQUALS, 3)));
         assertEquals("less_than 10", generator.format(Pair.of(GeneratorLength.Operator.LESS_THAN, 10)));
     }
 
     @Test
     public void testParse() {
-        GeneratorLength generator = new GeneratorLength();
-
         assertEquals(Pair.of(GeneratorLength.Operator.EQUALS, 3), generator.parse("equals 3"));
         assertEquals(Pair.of(GeneratorLength.Operator.LESS_THAN, 10), generator.parse("less_than 10"));
     }
