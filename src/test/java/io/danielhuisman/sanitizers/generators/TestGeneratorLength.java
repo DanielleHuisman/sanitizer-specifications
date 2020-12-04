@@ -134,5 +134,7 @@ public class TestGeneratorLength {
     public void testParse() {
         assertEquals(Pair.of(GeneratorLength.Operator.EQUALS, 3), generator.parse("equals 3"));
         assertEquals(Pair.of(GeneratorLength.Operator.LESS_THAN, 10), generator.parse("less_than 10"));
+        assertNull(generator.parse("equls"));
+        assertNull(generator.parse("equals d"));
     }
 }

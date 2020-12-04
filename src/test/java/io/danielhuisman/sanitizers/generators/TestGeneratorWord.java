@@ -115,5 +115,7 @@ public class TestGeneratorWord {
         assertEquals(Pair.of(GeneratorWord.Operator.EQUALS, "abc"), generator.parse("equals \"abc\""));
         assertEquals(Pair.of(GeneratorWord.Operator.NOT_EQUALS, " </script>"), generator.parse("not_equals \" </script>\""));
         assertEquals(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, "'\"' \n\\n"), generator.parse("not_contains \"'\\\"' \\n\\\\n\""));
+        assertNull(generator.parse("equls"));
+        assertNull(generator.parse("equals d"));
     }
 }

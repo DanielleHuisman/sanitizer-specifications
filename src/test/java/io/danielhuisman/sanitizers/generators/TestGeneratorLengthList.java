@@ -19,6 +19,8 @@ public class TestGeneratorLengthList {
 
     @Test
     public void test() throws TimeoutException {
+        test(List.of(), List.of(0, 1, 2, 3, 4), List.of());
+
         test(List.of(
                 List.of(
                         Pair.of(GeneratorLength.Operator.EQUALS, 1)
