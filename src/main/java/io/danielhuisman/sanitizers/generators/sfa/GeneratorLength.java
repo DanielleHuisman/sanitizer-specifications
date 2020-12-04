@@ -7,10 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import theory.characters.CharPred;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator, Integer>> {
 
@@ -74,5 +71,28 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
         }
 
         return examples;
+    }
+
+    @Override
+    public String format(Pair<Operator, Integer> input) {
+        return String.format("%s %d", input.getLeft().name().toLowerCase(), input.getRight());
+    }
+
+    @Override
+    public Pair<Operator, Integer> parse(String input) {
+        String[] split = input.split(" ");
+        if (split.length == 2) {
+            Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
+            if (operator.isPresent()) {
+                try {
+                    int length = Integer.parseInt(split[1]);
+
+                    return Pair.of(operator.get(), length);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 }

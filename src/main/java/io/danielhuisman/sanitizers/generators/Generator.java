@@ -12,4 +12,8 @@ public abstract class Generator<I, O> {
     public abstract O generate(I input) throws TimeoutException;
 
     public abstract Collection<Pair<String, O>> generateExamples() throws TimeoutException;
+
+    public abstract String format(I input);
+
+    public abstract I parse(String input);
 }

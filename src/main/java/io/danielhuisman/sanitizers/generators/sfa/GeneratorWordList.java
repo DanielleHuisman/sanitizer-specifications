@@ -60,4 +60,14 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
 
         return examples;
     }
+
+    @Override
+    public String format(Pair<GeneratorWord.Operator, Collection<String>> input) {
+        return String.format("%s [%s]", input.getLeft().name().toLowerCase(), String.join(", ", input.getRight()));
+    }
+
+    @Override
+    public Pair<GeneratorWord.Operator, Collection<String>> parse(String input) {
+        return null;
+    }
 }

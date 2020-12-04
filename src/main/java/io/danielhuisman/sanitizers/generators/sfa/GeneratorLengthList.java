@@ -67,4 +67,20 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
 
         return examples;
     }
+
+    @Override
+    public String format(Collection<Collection<Pair<GeneratorLength.Operator, Integer>>> input) {
+        return String.format("[%s]", input
+                .stream()
+                .map(inputAnd -> String.format("[%s]", inputAnd
+                        .stream()
+                        .map(generatorLength::format)
+                        .collect(Collectors.joining(", "))))
+                .collect(Collectors.joining(", ")));
+    }
+
+    @Override
+    public Collection<Collection<Pair<GeneratorLength.Operator, Integer>>> parse(String input) {
+        return null;
+    }
 }

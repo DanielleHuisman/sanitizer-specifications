@@ -20,15 +20,16 @@ public class TestGeneratorWord {
 
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
-            SFAWrapper sfa = generator.generate(Pair.of(GeneratorWord.Operator.EQUALS, match));
+            var matchInput = Pair.of(GeneratorWord.Operator.EQUALS, match);
+            SFAWrapper sfa = generator.generate(matchInput);
 
             for (int j = 0; j <= SIZE; j++) {
                 String input = StringUtils.repeat('a', j);
 
                 if (j == i) {
-                    assertTrue(sfa.accepts(input), String.format("Equals \"%s\" should accept string \"%s\"", match, input));
+                    assertTrue(sfa.accepts(input), String.format("%s should accept string \"%s\"", generator.format(matchInput), input));
                 } else {
-                    assertFalse(sfa.accepts(input), String.format("Equals \"%s\" should not accept string \"%s\"", match, input));
+                    assertFalse(sfa.accepts(input), String.format("%s should not accept string \"%s\"", generator.format(matchInput), input));
                 }
             }
         }
@@ -40,15 +41,16 @@ public class TestGeneratorWord {
 
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
-            SFAWrapper sfa = generator.generate(Pair.of(GeneratorWord.Operator.NOT_EQUALS, match));
+            var matchInput = Pair.of(GeneratorWord.Operator.NOT_EQUALS, match);
+            SFAWrapper sfa = generator.generate(matchInput);
 
             for (int j = 0; j <= SIZE; j++) {
                 String input = StringUtils.repeat('a', j);
 
                 if (j != i) {
-                    assertTrue(sfa.accepts(input), String.format("Not equals \"%s\" should accept string \"%s\"", match, input));
+                    assertTrue(sfa.accepts(input), String.format("%s should accept string \"%s\"", generator.format(matchInput), input));
                 } else {
-                    assertFalse(sfa.accepts(input), String.format("Not equals \"%s\" should not accept string \"%s\"", match, input));
+                    assertFalse(sfa.accepts(input), String.format("%s should not accept string \"%s\"", generator.format(matchInput), input));
                 }
             }
         }
@@ -60,7 +62,8 @@ public class TestGeneratorWord {
 
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
-            SFAWrapper sfa = generator.generate(Pair.of(GeneratorWord.Operator.CONTAINS, match));
+            var matchInput = Pair.of(GeneratorWord.Operator.CONTAINS, match);
+            SFAWrapper sfa = generator.generate(matchInput);
 
             for (int j = 0; j <= SIZE; j++) {
                 String prefix = StringUtils.repeat('b', j);
@@ -68,13 +71,13 @@ public class TestGeneratorWord {
                 String inputValid = prefix + match + postfix;
                 String inputInvalid = prefix + "q" + postfix;
 
-                assertTrue(sfa.accepts(inputValid), String.format("Contains \"%s\" should accept string \"%s\"", match, inputValid));
+                assertTrue(sfa.accepts(inputValid), String.format("%s should accept string \"%s\"", generator.format(matchInput), inputValid));
 
                 // Handle contains empty string
                 if (match.length() == 0) {
-                    assertTrue(sfa.accepts(inputInvalid), String.format("Contains \"%s\" should accept string \"%s\"", match, inputInvalid));
+                    assertTrue(sfa.accepts(inputInvalid), String.format("%s should accept string \"%s\"", generator.format(matchInput), inputInvalid));
                 } else {
-                    assertFalse(sfa.accepts(inputInvalid), String.format("Contains \"%s\" should not accept string \"%s\"", match, inputInvalid));
+                    assertFalse(sfa.accepts(inputInvalid), String.format("%s should not accept string \"%s\"", generator.format(matchInput), inputInvalid));
                 }
             }
         }
@@ -86,7 +89,8 @@ public class TestGeneratorWord {
 
         for (int i = 0; i < SIZE; i++) {
             String match = StringUtils.repeat('a', i);
-            SFAWrapper sfa = generator.generate(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, match));
+            var matchInput = Pair.of(GeneratorWord.Operator.NOT_CONTAINS, match);
+            SFAWrapper sfa = generator.generate(matchInput);
 
             for (int j = 0; j <= SIZE; j++) {
                 String prefix = StringUtils.repeat('b', j);
@@ -94,13 +98,13 @@ public class TestGeneratorWord {
                 String inputValid = prefix + match + postfix;
                 String inputInvalid = prefix + "q" + postfix;
 
-                assertFalse(sfa.accepts(inputValid), String.format("Not contains \"%s\" should not accept string \"%s\"", match, inputValid));
+                assertFalse(sfa.accepts(inputValid), String.format("%s should not accept string \"%s\"", generator.format(matchInput), inputValid));
 
                 // Handle not contains empty string
                 if (match.length() == 0) {
-                    assertFalse(sfa.accepts(inputInvalid), String.format("Not contains \"%s\" should not accept string \"%s\"", match, inputInvalid));
+                    assertFalse(sfa.accepts(inputInvalid), String.format("%s should not accept string \"%s\"", generator.format(matchInput), inputInvalid));
                 } else {
-                    assertTrue(sfa.accepts(inputInvalid), String.format("Not contains \"%s\" should accept string \"%s\"", match, inputInvalid));
+                    assertTrue(sfa.accepts(inputInvalid), String.format("%s should accept string \"%s\"", generator.format(matchInput), inputInvalid));
                 }
             }
         }

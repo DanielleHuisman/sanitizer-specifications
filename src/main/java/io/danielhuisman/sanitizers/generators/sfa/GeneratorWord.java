@@ -7,10 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import theory.characters.CharPred;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, String>> {
 
@@ -91,5 +88,23 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
         }
 
         return examples;
+    }
+
+    @Override
+    public String format(Pair<Operator, String> input) {
+        return String.format("%s \"%s\"", input.getLeft().name().toLowerCase(), input.getRight());
+    }
+
+    @Override
+    public Pair<Operator, String> parse(String input) {
+        String[] split = input.split(" ", 2);
+        if (split.length == 2) {
+            Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
+            if (operator.isPresent()) {
+                // TODO: parse string properly with quotes etc
+                return Pair.of(operator.get(), split[1]);
+            }
+        }
+        return null;
     }
 }
