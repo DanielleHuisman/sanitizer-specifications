@@ -75,12 +75,32 @@ public class SFAWrapper {
         return new SFAWrapper(getSFA().minimize(ALGEBRA));
     }
 
+    public SFAWrapper concatenateWith(SFAWrapper other) throws TimeoutException {
+        return new SFAWrapper(getSFA().concatenateWith(other.getSFA(), ALGEBRA));
+    }
+
     public SFAWrapper unionWith(SFAWrapper other) throws TimeoutException {
         return new SFAWrapper(getSFA().unionWith(other.getSFA(), ALGEBRA));
     }
 
     public SFAWrapper intersectionWith(SFAWrapper other) throws TimeoutException {
         return new SFAWrapper(getSFA().intersectionWith(other.getSFA(), ALGEBRA));
+    }
+
+    public static SFAWrapper concatenate(Collection<SFAWrapper> sfas) throws TimeoutException {
+        if (sfas.size() == 0) {
+            throw new RuntimeException("At least one SFA must be provided.");
+        }
+
+        SFAWrapper result = null;
+        for (SFAWrapper sfa : sfas) {
+            if (result == null) {
+                result = sfa;
+            } else {
+                result = result.concatenateWith(sfa);
+            }
+        }
+        return result.minimize();
     }
 
     public static SFAWrapper union(Collection<SFAWrapper> sfas) throws TimeoutException {

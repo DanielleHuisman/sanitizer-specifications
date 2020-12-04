@@ -61,9 +61,33 @@ public class Main {
             sfa.createDotFile("not_contains_abc_gt_2_lte_10", "combined/");
 
             String[] words = {"a", "abc", "abcabc", "abacbc", "esefesf", "usheufihsueihfuhseuf"};
+            System.out.println("not_contains_abc_gt_2_lte_10");
             for (String word : words) {
                 System.out.println(word + ": " + sfa.accepts(word));
             }
+            System.out.println();
+        } catch (TimeoutException | IOException e) {
+            e.printStackTrace();
+        }
+
+        // Test with concatenation
+        try {
+            GeneratorWord generatorWord = new GeneratorWord();
+
+            SFAWrapper sfa = SFAWrapper.concatenate(
+                    List.of(
+                            generatorWord.generate(Pair.of(GeneratorWord.Operator.EQUALS, "abc")),
+                            generatorWord.generate(Pair.of(GeneratorWord.Operator.EQUALS, "def"))
+                    )
+            );
+            sfa.createDotFile("abc_def", "concat/");
+
+            String[] words = {"a", "abc", "abcdef", "def", "abcde"};
+            System.out.println("abc_def");
+            for (String word : words) {
+                System.out.println(word + ": " + sfa.accepts(word));
+            }
+            System.out.println();
         } catch (TimeoutException | IOException e) {
             e.printStackTrace();
         }
