@@ -1,7 +1,5 @@
-package io.danielhuisman.sanitizers.generators;
+package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorWord;
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorWordList;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;

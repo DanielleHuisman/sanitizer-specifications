@@ -1,4 +1,4 @@
-package io.danielhuisman.sanitizers.generators;
+package io.danielhuisman.sanitizers.generators.sfa;
 
 import io.danielhuisman.sanitizers.generators.sfa.GeneratorRangeList;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
