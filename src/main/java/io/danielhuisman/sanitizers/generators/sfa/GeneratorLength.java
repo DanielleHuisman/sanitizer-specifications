@@ -1,23 +1,18 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import automata.sfa.SFAInputMove;
-import automata.sfa.SFAMove;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.sat4j.specs.TimeoutException;
-import theory.characters.CharPred;
 
 import java.util.*;
 
-public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator, Integer>> {
+public class GeneratorLength extends SFAGenerator<Pair<GeneratorRange.Operator, Integer>> {
 
-    public enum Operator {
-        EQUALS,
-        NOT_EQUALS,
-        LESS_THAN,
-        LESS_THAN_OR_EQUALS,
-        GREATER_THAN,
-        GREATER_THAN_OR_EQUALS
+    private final GeneratorRange generatorRange;
+
+    public GeneratorLength() {
+        generatorRange = new GeneratorRange();
     }
 
     @Override
@@ -26,38 +21,8 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
     }
 
     @Override
-    public SFAWrapper generate(Pair<GeneratorLength.Operator, Integer> input) throws TimeoutException {
-        Operator operator = input.getLeft();
-        int length = input.getRight();
-
-        Collection<SFAMove<CharPred, Character>> transitions = new LinkedList<>();
-        Collection<Integer> finalStates = new HashSet<>();
-
-        // Generate length amount of states with true transitions between them
-        for (int i = 0; i < length; i++) {
-            transitions.add(new SFAInputMove<>(i, i + 1, SFAWrapper.ALGEBRA.True()));
-        }
-
-        if (operator == Operator.EQUALS || operator == Operator.LESS_THAN_OR_EQUALS || operator == Operator.GREATER_THAN_OR_EQUALS) {
-            // Mark length state as final
-            finalStates.add(length);
-        }
-
-        if (operator == Operator.NOT_EQUALS || operator == Operator.LESS_THAN || operator == Operator.LESS_THAN_OR_EQUALS) {
-            // Mark all states except length as final
-            for (int i = 0; i < length; i++) {
-                finalStates.add(i);
-            }
-        }
-
-        if (operator == Operator.NOT_EQUALS || operator == Operator.GREATER_THAN || operator == Operator.GREATER_THAN_OR_EQUALS) {
-            // Add final state after length with transition to self
-            finalStates.add(length + 1);
-            transitions.add(new SFAInputMove<>(length, length + 1, SFAWrapper.ALGEBRA.True()));
-            transitions.add(new SFAInputMove<>(length + 1, length + 1, SFAWrapper.ALGEBRA.True()));
-        }
-
-        return new SFAWrapper(transitions, 0, finalStates, false);
+    public SFAWrapper generate(Pair<GeneratorRange.Operator, Integer> input) throws TimeoutException {
+        return generatorRange.generate(Triple.of(input.getLeft(), input.getRight(), SFAWrapper.ALGEBRA.True()));
     }
 
     @Override
@@ -65,7 +30,7 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
         List<Pair<String, SFAWrapper>> examples = new LinkedList<>();
 
         // Generate SFAs for all operators with length 3
-        for (Operator operator : Operator.values()) {
+        for (GeneratorRange.Operator operator : GeneratorRange.Operator.values()) {
             String name = operator.name().toLowerCase() + "_3";
             examples.add(Pair.of(name, generate(Pair.of(operator, 3))));
         }
@@ -74,15 +39,18 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorLength.Operator,
     }
 
     @Override
-    public String format(Pair<Operator, Integer> input) {
+    public String format(Pair<GeneratorRange.Operator, Integer> input) {
         return String.format("%s %d", input.getLeft().name().toLowerCase(), input.getRight());
     }
 
     @Override
-    public Pair<Operator, Integer> parse(String input) {
+    public Pair<GeneratorRange.Operator, Integer> parse(String input) {
         String[] split = input.split(" ");
         if (split.length == 2) {
-            Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
+            Optional<GeneratorRange.Operator> operator = Arrays.stream(GeneratorRange.Operator.values())
+                    .filter(op -> op.name().equalsIgnoreCase(split[0]))
+                    .findFirst();
+
             if (operator.isPresent()) {
                 try {
                     int length = Integer.parseInt(split[1]);

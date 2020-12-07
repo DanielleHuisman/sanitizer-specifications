@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair<GeneratorLength.Operator, Integer>>>> {
+public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair<GeneratorRange.Operator, Integer>>>> {
 
     private final GeneratorLength generatorLength;
 
@@ -24,10 +24,10 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
     }
 
     @Override
-    public SFAWrapper generate(Collection<Collection<Pair<GeneratorLength.Operator, Integer>>> input) throws TimeoutException {
+    public SFAWrapper generate(Collection<Collection<Pair<GeneratorRange.Operator, Integer>>> input) throws TimeoutException {
         // Match all lengths if no input was provided
         if (input.size() == 0) {
-            return generatorLength.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, 0));
+            return generatorLength.generate(Pair.of(GeneratorRange.Operator.GREATER_THAN_OR_EQUALS, 0));
         }
 
         // Combine length inputs using union for the outer list and intersection for the inner list (sum of products)
@@ -50,18 +50,18 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
 
         examples.add(Pair.of("gte_3_lte_5", generate(List.of(
                 List.of(
-                        Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, 3),
-                        Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, 5)
+                        Pair.of(GeneratorRange.Operator.GREATER_THAN_OR_EQUALS, 3),
+                        Pair.of(GeneratorRange.Operator.LESS_THAN_OR_EQUALS, 5)
                 )
         ))));
 
         examples.add(Pair.of("gte_3_lte_5_or_gt_8", generate(List.of(
                 List.of(
-                        Pair.of(GeneratorLength.Operator.GREATER_THAN_OR_EQUALS, 3),
-                        Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, 5)
+                        Pair.of(GeneratorRange.Operator.GREATER_THAN_OR_EQUALS, 3),
+                        Pair.of(GeneratorRange.Operator.LESS_THAN_OR_EQUALS, 5)
                 ),
                 List.of(
-                        Pair.of(GeneratorLength.Operator.GREATER_THAN, 8)
+                        Pair.of(GeneratorRange.Operator.GREATER_THAN, 8)
                 )
         ))));
 
@@ -69,7 +69,7 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
     }
 
     @Override
-    public String format(Collection<Collection<Pair<GeneratorLength.Operator, Integer>>> input) {
+    public String format(Collection<Collection<Pair<GeneratorRange.Operator, Integer>>> input) {
         return String.format("[%s]", input
                 .stream()
                 .map(inputAnd -> String.format("[%s]", inputAnd
@@ -80,7 +80,7 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
     }
 
     @Override
-    public Collection<Collection<Pair<GeneratorLength.Operator, Integer>>> parse(String input) {
+    public Collection<Collection<Pair<GeneratorRange.Operator, Integer>>> parse(String input) {
         return null;
     }
 }

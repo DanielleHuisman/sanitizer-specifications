@@ -1,9 +1,6 @@
 package io.danielhuisman.sanitizers;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorLength;
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorWord;
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorWordList;
-import io.danielhuisman.sanitizers.generators.sfa.SFAGenerator;
+import io.danielhuisman.sanitizers.generators.sfa.*;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -54,8 +51,8 @@ public class Main {
             SFAWrapper sfa = SFAWrapper.intersection(
                     List.of(
                             generatorWordList.generate(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, List.of("abc"))),
-                            generatorLength.generate(Pair.of(GeneratorLength.Operator.GREATER_THAN, 2)),
-                            generatorLength.generate(Pair.of(GeneratorLength.Operator.LESS_THAN_OR_EQUALS, 10))
+                            generatorLength.generate(Pair.of(GeneratorRange.Operator.GREATER_THAN, 2)),
+                            generatorLength.generate(Pair.of(GeneratorRange.Operator.LESS_THAN_OR_EQUALS, 10))
                     )
             );
             sfa.createDotFile("not_contains_abc_gt_2_lte_10", "combined/");
@@ -91,5 +88,7 @@ public class Main {
         } catch (TimeoutException | IOException e) {
             e.printStackTrace();
         }
+
+        // IDEA: adapt length generator to accept CharPred instead of ALGEBRA.True() to merge length and range generator functions
     }
 }
