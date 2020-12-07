@@ -1,7 +1,5 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorLength;
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorRange;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,7 +16,6 @@ public class TestGeneratorLength {
 
     @Test
     public void testEquals() throws TimeoutException {
-
         for (int i = 0; i < SIZE; i++) {
             var match = Pair.of(GeneratorRange.Operator.EQUALS, i);
             SFAWrapper sfa = generator.generate(match);

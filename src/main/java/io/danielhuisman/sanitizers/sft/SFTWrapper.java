@@ -6,12 +6,15 @@ import theory.characters.CharFunc;
 import theory.characters.CharPred;
 import theory.intervals.UnaryCharIntervalSolver;
 import transducers.sft.SFT;
+import transducers.sft.SFTMove;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SFTWrapper {
@@ -22,6 +25,11 @@ public class SFTWrapper {
 
     public SFTWrapper(SFT<CharPred, CharFunc, Character> sft) {
         this.sft = sft;
+    }
+
+    public SFTWrapper(Collection<SFTMove<CharPred, CharFunc, Character>> transitions, Integer initialState,
+                      Map<Integer, Set<List<Character>>> finalStatesAndTails) throws TimeoutException {
+        this.sft = SFT.MkSFT(transitions, initialState, finalStatesAndTails, ALGEBRA);
     }
 
     public SFT<CharPred, CharFunc, Character> getSFT() {
@@ -49,7 +57,11 @@ public class SFTWrapper {
     }
 
     public String execute(List<Character> input) throws TimeoutException {
-        return getSFT().outputOn(input, ALGEBRA).stream().map((c) -> Character.toString(c)).collect(Collectors.joining());
+        List<Character> output = getSFT().outputOn(input, ALGEBRA);
+        if (output == null) {
+            return null;
+        }
+        return output.stream().map((c) -> Character.toString(c)).collect(Collectors.joining());
     }
 
     public String execute(String input) throws TimeoutException {

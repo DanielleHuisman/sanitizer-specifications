@@ -1,7 +1,10 @@
 package io.danielhuisman.sanitizers;
 
 import io.danielhuisman.sanitizers.generators.sfa.*;
+import io.danielhuisman.sanitizers.generators.sft.GeneratorTrim;
+import io.danielhuisman.sanitizers.generators.sft.SFTGenerator;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
+import io.danielhuisman.sanitizers.sft.SFTWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.sat4j.specs.TimeoutException;
@@ -16,8 +19,8 @@ public class Main {
         Reflections reflections = new Reflections("io.danielhuisman.sanitizers.generators");
 
         // Find SFA generators
-        var generatorClasses = reflections.getSubTypesOf(SFAGenerator.class);
-        for (var generatorClass : generatorClasses) {
+        var generatorSFAClasses = reflections.getSubTypesOf(SFAGenerator.class);
+        for (var generatorClass : generatorSFAClasses) {
             // Instantiate generator
             var constructor = generatorClass.getConstructor();
             SFAGenerator<?> generator = constructor.newInstance();
@@ -29,6 +32,25 @@ public class Main {
             for (var example : examples) {
                 String name = example.getLeft();
                 SFAWrapper sfa = example.getRight();
+
+                sfa.createDotFile(name, generator.getName() + "/");
+            }
+        }
+
+        // Find SFT generators
+        var generatorSFTClasses = reflections.getSubTypesOf(SFTGenerator.class);
+        for (var generatorClass : generatorSFTClasses) {
+            // Instantiate generator
+            var constructor = generatorClass.getConstructor();
+            SFTGenerator<?> generator = constructor.newInstance();
+
+            // Generate examples and create dot files
+            var examples = generator.generateExamples();
+
+            // Create dot file for each example
+            for (var example : examples) {
+                String name = example.getLeft();
+                SFTWrapper sfa = example.getRight();
 
                 sfa.createDotFile(name, generator.getName() + "/");
             }
@@ -89,6 +111,19 @@ public class Main {
             e.printStackTrace();
         }
 
-        // IDEA: adapt length generator to accept CharPred instead of ALGEBRA.True() to merge length and range generator functions
+        // Test with SFT
+        try {
+            GeneratorTrim generatorTrim = new GeneratorTrim();
+
+            SFTWrapper sft = generatorTrim.generate(3);
+            String[] words = {"a", "abc", "abcdef", "def", ""};
+            System.out.println(generatorTrim.format(3));
+            for (String word : words) {
+                System.out.printf("\"%s\": %b \"%s\"%n", word, sft.accepts(word), sft.execute(word));
+            }
+            System.out.println();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 }
