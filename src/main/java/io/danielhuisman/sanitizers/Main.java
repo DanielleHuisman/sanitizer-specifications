@@ -1,10 +1,11 @@
 package io.danielhuisman.sanitizers;
 
 import io.danielhuisman.sanitizers.generators.sfa.*;
-import io.danielhuisman.sanitizers.generators.sft.GeneratorTrim;
 import io.danielhuisman.sanitizers.generators.sft.SFTGenerator;
+import io.danielhuisman.sanitizers.generators.sft.SFTStringGenerator;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import io.danielhuisman.sanitizers.sft.SFTWrapper;
+import io.danielhuisman.sanitizers.sft.string.SFTStringWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.sat4j.specs.TimeoutException;
@@ -51,6 +52,25 @@ public class Main {
             for (var example : examples) {
                 String name = example.getLeft();
                 SFTWrapper sfa = example.getRight();
+
+                sfa.createDotFile(name, generator.getName() + "/");
+            }
+        }
+
+        // Find SFT string generators
+        var generatorSFTStringClasses = reflections.getSubTypesOf(SFTStringGenerator.class);
+        for (var generatorClass : generatorSFTStringClasses) {
+            // Instantiate generator
+            var constructor = generatorClass.getConstructor();
+            SFTStringGenerator<?> generator = constructor.newInstance();
+
+            // Generate examples and create dot files
+            var examples = generator.generateExamples();
+
+            // Create dot file for each example
+            for (var example : examples) {
+                String name = example.getLeft();
+                SFTStringWrapper sfa = example.getRight();
 
                 sfa.createDotFile(name, generator.getName() + "/");
             }
@@ -108,21 +128,6 @@ public class Main {
             }
             System.out.println();
         } catch (TimeoutException | IOException e) {
-            e.printStackTrace();
-        }
-
-        // Test with SFT
-        try {
-            GeneratorTrim generatorTrim = new GeneratorTrim();
-
-            SFTWrapper sft = generatorTrim.generate(3);
-            String[] words = {"a", "abc", "abcdef", "def", ""};
-            System.out.println(generatorTrim.format(3));
-            for (String word : words) {
-                System.out.printf("\"%s\": %b \"%s\"%n", word, sft.accepts(word), sft.execute(word));
-            }
-            System.out.println();
-        } catch (TimeoutException e) {
             e.printStackTrace();
         }
     }
