@@ -39,7 +39,8 @@ public class TestGeneratorReplaceChar {
                 "<script>", "&lt;script&gt;",
                 "a & b", "a &amp; b",
                 "def", "def",
-                "<<&&>>", "&lt;&lt;&amp;&amp;&gt;&gt;"
+                "<<&&>>", "&lt;&lt;&amp;&amp;&gt;&gt;",
+                "&amp;", "&amp;amp;"
         ));
     }
 
