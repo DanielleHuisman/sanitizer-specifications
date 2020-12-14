@@ -1,0 +1,3 @@
+grammar Regex;
+
+range: '[' ']';
