@@ -4,6 +4,10 @@ import java.util.function.Function;
 
 public class Util {
 
+    public static String indent(String s) {
+        return s.replaceAll("(?m)^", "    ");
+    }
+
     @FunctionalInterface
     public interface FunctionWithException<T, R, E extends Exception> {
 
