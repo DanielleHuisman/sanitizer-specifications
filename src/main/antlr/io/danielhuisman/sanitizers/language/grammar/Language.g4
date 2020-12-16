@@ -70,8 +70,6 @@ expression
     | expression AND expression         # expressionOperator
     | expression OR expression          # expressionOperator
     | expression PLUS expression        # expressionOperator
-    | identifier arguments              # expressionGenerator
+    | identifier primitive+             # expressionGenerator
     | identifier                        # expressionIdentifier
     ;
-
-arguments: primitive+;

@@ -130,7 +130,10 @@ public class LanguageListener extends LanguageBaseListener {
     @Override
     public void exitExpressionGenerator(LanguageParser.ExpressionGeneratorContext ctx) {
         Identifier identifier = get(ctx.identifier());
-        List<Primitive<?>> arguments = get(ctx.arguments());
+        List<Primitive<?>> arguments = ctx.primitive()
+                .stream()
+                .map((primitive) -> (Primitive<?>) get(primitive))
+                .collect(Collectors.toList());
 
         set(ctx, new ExpressionGenerator(
                 ctx.start,
@@ -156,15 +159,6 @@ public class LanguageListener extends LanguageBaseListener {
         if (ctx.IDENTIFIER() != null) {
             set(ctx, new Identifier(ctx.IDENTIFIER().getText()));
         }
-    }
-
-    @Override
-    public void exitArguments(LanguageParser.ArgumentsContext ctx) {
-        set(ctx, ctx.primitive()
-                .stream()
-                .map((primitive) -> (Primitive<?>) get(primitive))
-                .collect(Collectors.toList())
-        );
     }
 
     @Override

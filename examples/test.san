@@ -26,7 +26,7 @@ whitelist = word-list "contains" [
 ]
 blacklist = (word "not_equals" "abc") and (word "not_equals" "def")
 
-range1` = range-list [
+range1 = range-list [
     ['A', 'Z', 3],
     ['-', 1],
     ['0', '9', 3]
