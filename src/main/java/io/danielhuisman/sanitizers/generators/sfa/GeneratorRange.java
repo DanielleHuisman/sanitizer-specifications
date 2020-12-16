@@ -2,7 +2,7 @@ package io.danielhuisman.sanitizers.generators.sfa;
 
 import automata.sfa.SFAInputMove;
 import automata.sfa.SFAMove;
-import io.danielhuisman.sanitizers.util.ICoercible;
+import io.danielhuisman.sanitizers.util.ICoercibleEnum;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -13,7 +13,7 @@ import java.util.*;
 
 public class GeneratorRange extends SFAGenerator<Triple<GeneratorRange.Operator, Integer, CharPred>> {
 
-    public enum Operator implements ICoercible {
+    public enum Operator implements ICoercibleEnum {
         EQUALS("="),
         NOT_EQUALS("!="),
         LESS_THAN("<"),

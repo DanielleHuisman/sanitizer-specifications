@@ -1,18 +1,19 @@
 package io.danielhuisman.sanitizers.language.ir.expressions;
 
 import io.danielhuisman.sanitizers.automaton.AutomatonWrapper;
-import io.danielhuisman.sanitizers.util.ICoercible;
-import io.danielhuisman.sanitizers.util.Util;
 import io.danielhuisman.sanitizers.generators.Generator;
 import io.danielhuisman.sanitizers.generators.Generators;
 import io.danielhuisman.sanitizers.language.ir.Identifier;
 import io.danielhuisman.sanitizers.language.ir.Memory;
 import io.danielhuisman.sanitizers.language.ir.Primitive;
+import io.danielhuisman.sanitizers.util.ICoercibleEnum;
+import io.danielhuisman.sanitizers.util.Util;
 import org.antlr.v4.runtime.Token;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.sat4j.specs.TimeoutException;
+import theory.characters.CharPred;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -54,9 +55,6 @@ public class ExpressionGenerator extends Expression {
         System.out.println(arguments);
 
         System.out.println("before: " + input.toString());
-        if (input instanceof List) {
-            System.out.println("oui");
-        }
 
         for (Method method : generator.getClass().getMethods()) {
             if (method.getName().equals("generate")) {
@@ -79,6 +77,7 @@ public class ExpressionGenerator extends Expression {
     }
 
     public Object coerce(Object input, Type type) {
+        // Coerce parameterized types (pair, triple, list)
         if (type instanceof ParameterizedType) {
             var arguments = ((ParameterizedType) type).getActualTypeArguments();
 
@@ -93,23 +92,26 @@ public class ExpressionGenerator extends Expression {
             } else if (input instanceof List) {
                 var list = (List<?>) input;
 
-                System.out.println("in: " + list);
-
-                var out = list.stream().map((value) -> coerce(value, arguments[0])).collect(Collectors.toList());
-                System.out.println("out: " + out);
-                return out;
+                return list.stream().map((value) -> coerce(value, arguments[0])).collect(Collectors.toList());
             }
         }
 
+        // Find class for this type
+        Class<?> typeClass;
+        try {
+            typeClass = Class.forName(type.getTypeName());
+        } catch (ClassNotFoundException e) {
+            return input;
+        }
+
+        // Coerce enums
         if (input instanceof String) {
             var inputString = (String) input;
 
             try {
-                Class<?> typeClass = Class.forName(type.getTypeName());
-
                 // Check if the type is an enum
                 if (Enum.class.isAssignableFrom(typeClass)) {
-                    boolean isCoercible = ICoercible.class.isAssignableFrom(typeClass);
+                    boolean isCoercible = ICoercibleEnum.class.isAssignableFrom(typeClass);
 
                     // Loop over enum values
                     for (Field field : typeClass.getDeclaredFields()) {
@@ -123,7 +125,7 @@ public class ExpressionGenerator extends Expression {
                             }
 
                             if (isCoercible) {
-                                var coercible = (ICoercible) value;
+                                var coercible = (ICoercibleEnum) value;
                                 if (coercible.getAlias().equalsIgnoreCase(inputString)) {
                                     // Replace string with enum value
                                     input = value;
@@ -133,9 +135,20 @@ public class ExpressionGenerator extends Expression {
                         }
                     }
                 }
-            } catch (ClassNotFoundException | IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 System.err.println("This error is a warning:");
                 e.printStackTrace();
+            }
+        }
+
+        // Coerce CharPred
+        if (typeClass == CharPred.class) {
+            if (input instanceof Character) {
+                return new CharPred((Character) input);
+            } else if (input instanceof Pair) {
+                var pair = (Pair<?, ?>) input;
+
+                return new CharPred((Character) pair.getLeft(), (Character) pair.getRight());
             }
         }
 

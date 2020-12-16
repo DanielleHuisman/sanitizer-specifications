@@ -1,6 +1,6 @@
 package io.danielhuisman.sanitizers.util;
 
-public interface ICoercible {
+public interface ICoercibleEnum {
     
     String getAlias();
 }

@@ -25,11 +25,11 @@ whitelist = word-list ("contains", [
 ])
 blacklist = word ("not_equals", "abc") and word ("not_equals", "def")
 
-//range1 = range-list [
-//    ('A', 'Z', 3),
-//    ('-', 1),
-//    ('0', '9', 3)
-//]
+range1 = range-list [
+    (('A', 'Z'), 3),
+    ('-', 1),
+    (('0', '9'), 3)
+]
 
 print test1
 print test2
@@ -38,3 +38,12 @@ print test4
 accepts test2 "def\"\\fed"
 accepts test3 "1234"
 rejects test4 "abc"
+
+print blacklist
+accepts blacklist "qed"
+rejects blacklist "abc"
+rejects blacklist "def"
+
+print range1
+accepts range1 "ABC-123"
+rejects range1 "abc-123"
