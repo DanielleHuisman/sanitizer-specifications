@@ -31,7 +31,7 @@ RIGHT_BRACKET: ']';
 COMMA: ',';
 PRINT: 'print';
 ACCEPTS: 'accepts';
-DENIES: 'denies';
+REJECTS: 'rejects';
 
 // Identifier
 IDENTIFIER: LETTER ((LETTER | DIGIT | DASH)* (LETTER | DIGIT))*;
@@ -49,6 +49,7 @@ primitive
     : INTEGER                                           # primitiveInteger
     | CHAR                                              # primitiveCharacter
     | STRING                                            # primitiveString
+    | LEFT_PAREN (primitive COMMA?)* RIGHT_PAREN        # primitiveTuple
     | LEFT_BRACKET (primitive COMMA?)* RIGHT_BRACKET    # primitiveList
     ;
 
@@ -60,7 +61,7 @@ statement
     : identifier ASSIGN expression      # statementAssignment
     | PRINT identifier                  # statementPrint
     | ACCEPTS identifier STRING         # statementAssert
-    | DENIES identifier STRING          # statementAssert
+    | REJECTS identifier STRING          # statementAssert
     ;
 
 // Expressions

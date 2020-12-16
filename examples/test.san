@@ -1,38 +1,40 @@
-test1 = length "=" 10
-test2 = length ">" 3 and length "<" 8
+test1 = length ("=", 10)
+test2 = length (">", 3) and length ("<", 9)
 test3 = test1 or test2
-test4 = test1 plus test3
-test5 = not length "=" 10
+test4 = test1 plus test2
+test5 = not length ("=", 10)
 
-test1_alt = length-list [
-    [">", 9],
-    ["<", 11]
-]
-test2_alt = length-list [
-    [">=", 4],
-    ["<=", 7]
-]
+test1_alt = length-list [[
+    (">", 9),
+    ("<", 11)
+]]
+test2_alt = length-list [[
+    (">=", 4),
+    ("<=", 8)
+]]
 test3_alt = test1_alt or test2_alt
-test4_alt = length-list [
-    [">=", 14],
-    ["<=", 17]
-]
-// TODO: check test4_alt, might not be correct
+test4_alt = length-list [[
+    (">=", 14),
+    ("<=", 18)
+]]
 
-whitelist = word-list "contains" [
+whitelist = word-list ("contains", [
     "abc",
     "def",
     "\"test\""
-]
-blacklist = (word "not_equals" "abc") and (word "not_equals" "def")
+])
+blacklist = word ("not_equals", "abc") and word ("not_equals", "def")
 
-range1 = range-list [
-    ['A', 'Z', 3],
-    ['-', 1],
-    ['0', '9', 3]
-]
+//range1 = range-list [
+//    ('A', 'Z', 3),
+//    ('-', 1),
+//    ('0', '9', 3)
+//]
 
 print test1
+print test2
+print test3
+print test4
 accepts test2 "def\"\\fed"
 accepts test3 "1234"
-denies test4 "abc"
+rejects test4 "abc"

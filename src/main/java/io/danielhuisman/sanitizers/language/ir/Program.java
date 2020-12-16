@@ -1,8 +1,9 @@
 package io.danielhuisman.sanitizers.language.ir;
 
-import io.danielhuisman.sanitizers.Util;
+import io.danielhuisman.sanitizers.util.Util;
 import io.danielhuisman.sanitizers.language.errors.ParseError;
 import io.danielhuisman.sanitizers.language.ir.statements.Statement;
+import org.sat4j.specs.TimeoutException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,13 @@ public class Program {
 
     public void addError(ParseError error) {
         errors.add(error);
+    }
+
+    public void execute() throws TimeoutException {
+        Memory memory = new Memory();
+        for (Statement statement : statements) {
+            statement.execute(memory);
+        }
     }
 
     @Override

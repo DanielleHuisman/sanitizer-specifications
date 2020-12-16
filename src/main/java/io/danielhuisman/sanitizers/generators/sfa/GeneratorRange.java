@@ -2,6 +2,7 @@ package io.danielhuisman.sanitizers.generators.sfa;
 
 import automata.sfa.SFAInputMove;
 import automata.sfa.SFAMove;
+import io.danielhuisman.sanitizers.util.ICoercible;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -12,13 +13,24 @@ import java.util.*;
 
 public class GeneratorRange extends SFAGenerator<Triple<GeneratorRange.Operator, Integer, CharPred>> {
 
-    public enum Operator {
-        EQUALS,
-        NOT_EQUALS,
-        LESS_THAN,
-        LESS_THAN_OR_EQUALS,
-        GREATER_THAN,
-        GREATER_THAN_OR_EQUALS
+    public enum Operator implements ICoercible {
+        EQUALS("="),
+        NOT_EQUALS("!="),
+        LESS_THAN("<"),
+        LESS_THAN_OR_EQUALS("<="),
+        GREATER_THAN(">"),
+        GREATER_THAN_OR_EQUALS(">=");
+
+        private final String alias;
+
+        Operator(String alias) {
+            this.alias = alias;
+        }
+
+        @Override
+        public String getAlias() {
+            return alias;
+        }
     }
 
     @Override

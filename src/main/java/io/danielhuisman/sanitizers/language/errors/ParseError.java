@@ -1,6 +1,6 @@
 package io.danielhuisman.sanitizers.language.errors;
 
-import io.danielhuisman.sanitizers.Util;
+import io.danielhuisman.sanitizers.util.Util;
 import io.danielhuisman.sanitizers.language.ir.Program;
 import org.antlr.v4.runtime.Token;
 

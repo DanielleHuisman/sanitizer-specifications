@@ -1,76 +1,36 @@
 package io.danielhuisman.sanitizers;
 
-import io.danielhuisman.sanitizers.generators.sfa.*;
-import io.danielhuisman.sanitizers.generators.sft.SFTGenerator;
-import io.danielhuisman.sanitizers.generators.sft.SFTStringGenerator;
+import io.danielhuisman.sanitizers.automaton.AutomatonWrapper;
+import io.danielhuisman.sanitizers.generators.Generator;
+import io.danielhuisman.sanitizers.generators.Generators;
+import io.danielhuisman.sanitizers.generators.sfa.GeneratorLength;
+import io.danielhuisman.sanitizers.generators.sfa.GeneratorRange;
+import io.danielhuisman.sanitizers.generators.sfa.GeneratorWord;
+import io.danielhuisman.sanitizers.generators.sfa.GeneratorWordList;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
-import io.danielhuisman.sanitizers.sft.SFTWrapper;
-import io.danielhuisman.sanitizers.sft.string.SFTStringWrapper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
 
     public static void generateExamples()  throws ReflectiveOperationException, TimeoutException, IOException {
-        // Initialize reflections library
-        Reflections reflections = new Reflections("io.danielhuisman.sanitizers.generators");
+        // Find generators
+        Generators.initialize();
+        System.out.printf("Found generators: %s%n", Generators.getGenerators().stream().map(Generator::getName).collect(Collectors.joining(", ")));
 
-        // Find SFA generators
-        var generatorSFAClasses = reflections.getSubTypesOf(SFAGenerator.class);
-        for (var generatorClass : generatorSFAClasses) {
-            // Instantiate generator
-            var constructor = generatorClass.getConstructor();
-            SFAGenerator<?> generator = constructor.newInstance();
-
+        // Loop over all generators
+        for (Generator<?, ?> generator : Generators.getGenerators()) {
             // Generate examples and create dot files
             var examples = generator.generateExamples();
 
             // Create dot file for each example
             for (var example : examples) {
                 String name = example.getLeft();
-                SFAWrapper sfa = example.getRight();
-
-                sfa.createDotFile(name, generator.getName() + "/");
-            }
-        }
-
-        // Find SFT generators
-        var generatorSFTClasses = reflections.getSubTypesOf(SFTGenerator.class);
-        for (var generatorClass : generatorSFTClasses) {
-            // Instantiate generator
-            var constructor = generatorClass.getConstructor();
-            SFTGenerator<?> generator = constructor.newInstance();
-
-            // Generate examples and create dot files
-            var examples = generator.generateExamples();
-
-            // Create dot file for each example
-            for (var example : examples) {
-                String name = example.getLeft();
-                SFTWrapper sfa = example.getRight();
-
-                sfa.createDotFile(name, generator.getName() + "/");
-            }
-        }
-
-        // Find SFT string generators
-        var generatorSFTStringClasses = reflections.getSubTypesOf(SFTStringGenerator.class);
-        for (var generatorClass : generatorSFTStringClasses) {
-            // Instantiate generator
-            var constructor = generatorClass.getConstructor();
-            SFTStringGenerator<?> generator = constructor.newInstance();
-
-            // Generate examples and create dot files
-            var examples = generator.generateExamples();
-
-            // Create dot file for each example
-            for (var example : examples) {
-                String name = example.getLeft();
-                SFTStringWrapper sfa = example.getRight();
+                AutomatonWrapper<?, ?> sfa = example.getRight();
 
                 sfa.createDotFile(name, generator.getName() + "/");
             }

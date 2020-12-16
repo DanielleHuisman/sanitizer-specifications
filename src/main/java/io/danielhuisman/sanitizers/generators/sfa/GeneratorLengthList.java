@@ -1,6 +1,6 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.Util;
+import io.danielhuisman.sanitizers.util.Util;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;

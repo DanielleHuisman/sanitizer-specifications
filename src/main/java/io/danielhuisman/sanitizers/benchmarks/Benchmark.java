@@ -1,9 +1,10 @@
 package io.danielhuisman.sanitizers.benchmarks;
 
+import io.danielhuisman.sanitizers.automaton.AutomatonWrapper;
 import io.danielhuisman.sanitizers.generators.Generator;
 import org.sat4j.specs.TimeoutException;
 
-public abstract class Benchmark<I, O, P> {
+public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
 
     protected final Generator<I, O> generator;
 

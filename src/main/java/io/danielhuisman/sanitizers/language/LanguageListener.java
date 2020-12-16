@@ -1,5 +1,6 @@
 package io.danielhuisman.sanitizers.language;
 
+import io.danielhuisman.sanitizers.util.Tuple;
 import io.danielhuisman.sanitizers.language.errors.SyntaxError;
 import io.danielhuisman.sanitizers.language.grammar.LanguageBaseListener;
 import io.danielhuisman.sanitizers.language.grammar.LanguageParser;
@@ -77,8 +78,8 @@ public class LanguageListener extends LanguageBaseListener {
                 ctx.start,
                 ctx.stop,
                 get(ctx.identifier()),
-                ctx.children.get(0).getText().equals("accepts") ? StatementAssert.AssertType.ACCEPTS : StatementAssert.AssertType.DENIES,
-                ctx.STRING() == null ? null : ctx.STRING().getText().substring(1, ctx.STRING().getText().length() - 1)
+                ctx.children.get(0).getText().equals("accepts") ? StatementAssert.AssertType.ACCEPTS : StatementAssert.AssertType.REJECTS,
+                ctx.STRING() == null ? null : StringEscapeUtils.unescapeJava(ctx.STRING().getText().substring(1, ctx.STRING().getText().length() - 1))
         ));
     }
 
@@ -179,13 +180,28 @@ public class LanguageListener extends LanguageBaseListener {
     }
 
     @Override
+    public void exitPrimitiveTuple(LanguageParser.PrimitiveTupleContext ctx) {
+        List<Primitive<?>> values = ctx.primitive()
+                .stream()
+                .map((primitive) -> (Primitive<?>) get(primitive))
+                .collect(Collectors.toList());
+
+        set(ctx, new Primitive<>(
+                Tuple.class,
+                new Tuple<>(values.size(), values)
+        ));
+    }
+
+    @Override
     public void exitPrimitiveList(LanguageParser.PrimitiveListContext ctx) {
+        List<Primitive<?>> values = ctx.primitive()
+                .stream()
+                .map((primitive) -> (Primitive<?>) get(primitive))
+                .collect(Collectors.toList());
+
         set(ctx, new Primitive<>(
                 List.class,
-                ctx.primitive()
-                    .stream()
-                    .map((primitive) -> (Primitive<?>) get(primitive))
-                    .collect(Collectors.toList())
+                values
         ));
     }
 }

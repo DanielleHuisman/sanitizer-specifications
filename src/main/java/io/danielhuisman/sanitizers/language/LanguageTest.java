@@ -1,6 +1,7 @@
 package io.danielhuisman.sanitizers.language;
 
-import io.danielhuisman.sanitizers.language.ir.Program;
+import io.danielhuisman.sanitizers.generators.Generators;
+import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
 
@@ -8,14 +9,15 @@ public class LanguageTest {
 
     public static void main(String[] args) {
         try {
-            Program program = Language.parseString("test1 = length \"=\" 10\nprint test1\ntest2 = word \"abc\"");
-            System.out.println(program.getFormattedErrors());
-            System.out.println(program);
+            Generators.initialize();
 
-            program = Language.parseFile("examples/test.san");
-            System.out.println(program.getFormattedErrors());
-            System.out.println(program);
-        } catch (IOException e) {
+            Language.runString(
+                    "test1 = length (\"=\", 10)\nprint test1\ntest2 = word (\"equals\", \"abc\")\n" +
+                    "accepts test2 \"abc\"\nrejects test2 \"def\""
+            );
+
+            Language.runFile("examples/test.san");
+        } catch (ReflectiveOperationException | IOException | TimeoutException e) {
             e.printStackTrace();
         }
     }

@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.sat4j.specs.TimeoutException;
 
 import java.io.IOException;
 
@@ -42,5 +43,37 @@ public class Language {
         walker.walk(listener, parser.program());
 
         return program;
+    }
+
+    public static boolean process(Program program) {
+        System.out.println(program);
+
+        // Check for errors
+        if (program.getErrors().size() > 0) {
+            System.err.println(program.getFormattedErrors());
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void runString(String input) throws TimeoutException {
+        Program program = parseString(input);
+
+        if (process(program)) {
+            run(program);
+        }
+    }
+
+    public static void runFile(String path) throws IOException, TimeoutException {
+        Program program = parseFile(path);
+
+        if (process(program)) {
+            run(program);
+        }
+    }
+
+    public static void run(Program program) throws TimeoutException {
+        program.execute();
     }
 }

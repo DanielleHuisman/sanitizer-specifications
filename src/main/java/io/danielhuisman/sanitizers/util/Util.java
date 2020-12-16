@@ -1,4 +1,4 @@
-package io.danielhuisman.sanitizers;
+package io.danielhuisman.sanitizers.util;
 
 import java.util.function.Function;
 

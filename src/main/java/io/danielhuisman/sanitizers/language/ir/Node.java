@@ -1,6 +1,7 @@
 package io.danielhuisman.sanitizers.language.ir;
 
 import org.antlr.v4.runtime.Token;
+import org.sat4j.specs.TimeoutException;
 
 public abstract class Node<T> {
 
@@ -19,4 +20,6 @@ public abstract class Node<T> {
     public Token getEnd() {
         return end;
     }
+
+    public abstract T execute(Memory memory) throws TimeoutException;
 }

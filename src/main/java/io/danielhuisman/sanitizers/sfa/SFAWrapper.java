@@ -1,7 +1,9 @@
 package io.danielhuisman.sanitizers.sfa;
 
+import automata.Automaton;
 import automata.sfa.SFA;
 import automata.sfa.SFAMove;
+import io.danielhuisman.sanitizers.automaton.AutomatonWrapper;
 import org.sat4j.specs.TimeoutException;
 import theory.BooleanAlgebra;
 import theory.characters.CharPred;
@@ -14,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SFAWrapper {
+public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
 
     public static final BooleanAlgebra<CharPred, Character> ALGEBRA = new UnaryCharIntervalSolver();
 
@@ -43,16 +45,23 @@ public class SFAWrapper {
         this.sfa = SFA.MkSFA(transitions, initialState, finalStates, ALGEBRA, remUnreachableStates, normalize, keepEmpty);
     }
 
+    @Override
+    public Automaton<CharPred, Character> getAutomaton() {
+        return sfa;
+    }
+
     public SFA<CharPred, Character> getSFA() {
         return sfa;
     }
 
+    @Override
     public void createDotFile(String fileName) throws IOException {
         Files.createDirectories(Paths.get("dot"));
 
         getSFA().createDotFile(fileName, "dot/");
     }
 
+    @Override
     public void createDotFile(String fileName, String path) throws IOException {
         Files.createDirectories(Paths.get("dot/" + path));
 
@@ -63,6 +72,7 @@ public class SFAWrapper {
         return getSFA().accepts(input, ALGEBRA);
     }
 
+    @Override
     public boolean accepts(String input) throws TimeoutException {
         return accepts(input.chars().mapToObj(c -> (char) c).collect(Collectors.toList()));
     }
