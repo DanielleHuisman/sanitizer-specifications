@@ -1,8 +1,21 @@
+/* SFAs */
+
 test1 = length ("=", 10)
 test2 = length (">", 3) and length ("<", 9)
 test3 = test1 or test2
 test4 = test1 plus test2
 test5 = not length ("=", 10)
+
+export test1
+export test2
+export test3
+export test4
+accepts test1 "0123456789"
+rejects test1 "123456789"
+rejects test1 "01234567890"
+accepts test2 "def\"\\fed"
+accepts test3 "1234"
+rejects test4 "abc"
 
 test1_alt = length-list [[
     (">", 9),
@@ -18,6 +31,17 @@ test4_alt = length-list [[
     ("<=", 18)
 ]]
 
+export test1_alt
+export test2_alt
+export test3_alt
+export test4_alt
+accepts test1_alt "0123456789"
+rejects test1_alt "123456789"
+rejects test1_alt "01234567890"
+accepts test2_alt "def\"\\fed"
+accepts test3_alt "1234"
+rejects test4_alt "abc"
+
 whitelist = word-list ("contains", [
     "abc",
     "def",
@@ -25,25 +49,49 @@ whitelist = word-list ("contains", [
 ])
 blacklist = word ("not_equals", "abc") and word ("not_equals", "def")
 
+export whitelist
+accepts whitelist "testabctest"
+accepts whitelist "\"test\""
+rejects whitelist "testtest"
+
+export blacklist
+accepts blacklist "qed"
+rejects blacklist "abc"
+rejects blacklist "def"
+
 range1 = range-list [
     (('A', 'Z'), 3),
     ('-', 1),
     (('0', '9'), 3)
 ]
 
-print test1
-print test2
-print test3
-print test4
-accepts test2 "def\"\\fed"
-accepts test3 "1234"
-rejects test4 "abc"
-
-print blacklist
-accepts blacklist "qed"
-rejects blacklist "abc"
-rejects blacklist "def"
-
-print range1
+export range1
 accepts range1 "ABC-123"
 rejects range1 "abc-123"
+
+/* SFTs */
+
+trim = trim 4
+
+export trim
+accepts trim ""
+accepts trim "abcd"
+accepts trim "abcdef"
+
+swapAB = replace-char [
+    ('a', "b"),
+    ('b', "a")
+]
+
+export swapAB
+outputs swapAB "abc" "bac"
+
+html_entities = replace-char [
+    ('&', "&amp;"),
+    ('<', "&lt;"),
+    ('>', "&gt;")
+]
+
+export html_entities
+outputs html_entities "<script>" "&lt;script&gt;"
+outputs html_entities "&amp;" "&amp;amp;"

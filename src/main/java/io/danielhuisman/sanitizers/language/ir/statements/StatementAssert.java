@@ -33,7 +33,6 @@ public class StatementAssert extends Statement {
         var automaton = memory.get(identifier);
 
         if (type == AssertType.ACCEPTS && !automaton.accepts(word)) {
-            System.out.println(word + " " + word.length() + " " + StringEscapeUtils.unescapeJava(word).length());
             throw new RuntimeException(String.format("Automaton \"%s\" does not accept \"%s\"", identifier.getName(), StringEscapeUtils.escapeJava(word)));
         } else if (type == AssertType.REJECTS && automaton.accepts(word)) {
             throw new RuntimeException(String.format("Automaton \"%s\" does not deny \"%s\"", identifier.getName(), StringEscapeUtils.escapeJava(word)));

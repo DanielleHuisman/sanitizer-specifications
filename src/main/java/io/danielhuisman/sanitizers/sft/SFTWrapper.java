@@ -74,6 +74,7 @@ public class SFTWrapper implements AutomatonWrapper<CharPred, Character> {
         return output.stream().map((c) -> Character.toString(c)).collect(Collectors.joining());
     }
 
+    @Override
     public String execute(String input) throws TimeoutException {
         return execute(input.chars().mapToObj(c -> (char) c).collect(Collectors.toList()));
     }

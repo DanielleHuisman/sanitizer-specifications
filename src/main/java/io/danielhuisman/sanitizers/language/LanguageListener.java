@@ -1,6 +1,5 @@
 package io.danielhuisman.sanitizers.language;
 
-import io.danielhuisman.sanitizers.util.Tuple;
 import io.danielhuisman.sanitizers.language.errors.SyntaxError;
 import io.danielhuisman.sanitizers.language.grammar.LanguageBaseListener;
 import io.danielhuisman.sanitizers.language.grammar.LanguageParser;
@@ -12,10 +11,8 @@ import io.danielhuisman.sanitizers.language.ir.expressions.Expression;
 import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionGenerator;
 import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionIdentifier;
 import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionOperator;
-import io.danielhuisman.sanitizers.language.ir.statements.Statement;
-import io.danielhuisman.sanitizers.language.ir.statements.StatementAssert;
-import io.danielhuisman.sanitizers.language.ir.statements.StatementAssignment;
-import io.danielhuisman.sanitizers.language.ir.statements.StatementPrint;
+import io.danielhuisman.sanitizers.language.ir.statements.*;
+import io.danielhuisman.sanitizers.util.Tuple;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -64,8 +61,17 @@ public class LanguageListener extends LanguageBaseListener {
     }
 
     @Override
-    public void exitStatementPrint(LanguageParser.StatementPrintContext ctx) {
-        set(ctx, new StatementPrint(
+    public void exitStatementImport(LanguageParser.StatementImportContext ctx) {
+        set(ctx, new StatementImport(
+                ctx.start,
+                ctx.stop,
+                get(ctx.identifier())
+        ));
+    }
+
+    @Override
+    public void exitStatementExport(LanguageParser.StatementExportContext ctx) {
+        set(ctx, new StatementExport(
                 ctx.start,
                 ctx.stop,
                 get(ctx.identifier())
@@ -74,12 +80,28 @@ public class LanguageListener extends LanguageBaseListener {
 
     @Override
     public void exitStatementAssert(LanguageParser.StatementAssertContext ctx) {
+        String input = ctx.STRING().getText();
+
         set(ctx, new StatementAssert(
                 ctx.start,
                 ctx.stop,
                 get(ctx.identifier()),
                 ctx.children.get(0).getText().equals("accepts") ? StatementAssert.AssertType.ACCEPTS : StatementAssert.AssertType.REJECTS,
-                ctx.STRING() == null ? null : StringEscapeUtils.unescapeJava(ctx.STRING().getText().substring(1, ctx.STRING().getText().length() - 1))
+                ctx.STRING() == null ? null : StringEscapeUtils.unescapeJava(input.substring(1, input.length() - 1))
+        ));
+    }
+
+    @Override
+    public void exitStatementTest(LanguageParser.StatementTestContext ctx) {
+        String input = ctx.STRING().size() >= 1 ? ctx.STRING().get(0).getText() : null;
+        String output = ctx.STRING().size() >= 2 ? ctx.STRING().get(1).getText() : null;
+
+        set(ctx, new StatementTest(
+                ctx.start,
+                ctx.stop,
+                get(ctx.identifier()),
+                input == null ? null : StringEscapeUtils.unescapeJava(input.substring(1, input.length() - 1)),
+                output == null ? null : StringEscapeUtils.unescapeJava(output.substring(1, output.length() - 1))
         ));
     }
 

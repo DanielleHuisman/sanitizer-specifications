@@ -6,11 +6,11 @@ import org.antlr.v4.runtime.Token;
 
 import java.io.IOException;
 
-public class StatementPrint extends Statement {
+public class StatementExport extends Statement {
 
     public Identifier identifier;
 
-    public StatementPrint(Token start, Token end, Identifier identifier) {
+    public StatementExport(Token start, Token end, Identifier identifier) {
         super(start, end);
         this.identifier = identifier;
     }
@@ -34,6 +34,6 @@ public class StatementPrint extends Statement {
 
     @Override
     public String toString() {
-        return "print " + identifier.toString();
+        return "export " + identifier.toString();
     }
 }

@@ -60,6 +60,7 @@ public class SFTStringWrapper implements AutomatonWrapper<CharPred, String> {
         return getSFT().accepts(input.chars().mapToObj(Character::toString).collect(Collectors.toList()), ALGEBRA);
     }
 
+    @Override
     public String execute(String input) throws TimeoutException {
         List<String> output = getSFT().outputOn(input.chars().mapToObj(Character::toString).collect(Collectors.toList()), ALGEBRA);
         if (output == null) {

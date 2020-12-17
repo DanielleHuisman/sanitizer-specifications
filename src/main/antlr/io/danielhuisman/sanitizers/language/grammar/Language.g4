@@ -29,9 +29,11 @@ RIGHT_PAREN: ')';
 LEFT_BRACKET: '[';
 RIGHT_BRACKET: ']';
 COMMA: ',';
-PRINT: 'print';
+IMPORT: 'import';
+EXPORT: 'export';
 ACCEPTS: 'accepts';
 REJECTS: 'rejects';
+OUTPUTS: 'outputs';
 
 // Identifier
 IDENTIFIER: LETTER ((LETTER | DIGIT | DASH)* (LETTER | DIGIT))*;
@@ -59,9 +61,11 @@ program: statement* EOF;
 // Statements
 statement
     : identifier ASSIGN expression      # statementAssignment
-    | PRINT identifier                  # statementPrint
+    | IMPORT identifier                 # statementImport
+    | EXPORT identifier                 # statementExport
     | ACCEPTS identifier STRING         # statementAssert
-    | REJECTS identifier STRING          # statementAssert
+    | REJECTS identifier STRING         # statementAssert
+    | OUTPUTS identifier STRING STRING  # statementTest
     ;
 
 // Expressions

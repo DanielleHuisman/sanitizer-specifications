@@ -14,4 +14,6 @@ public interface AutomatonWrapper<P, S> {
     void createDotFile(String fileName, String path) throws IOException;
 
     boolean accepts(String input) throws TimeoutException;
+
+    String execute(String input) throws TimeoutException;
 }

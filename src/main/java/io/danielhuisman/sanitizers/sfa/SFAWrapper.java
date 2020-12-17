@@ -77,6 +77,11 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
         return accepts(input.chars().mapToObj(c -> (char) c).collect(Collectors.toList()));
     }
 
+    @Override
+    public String execute(String input) throws TimeoutException {
+        return null;
+    }
+
     public SFAWrapper complement() throws TimeoutException {
         return new SFAWrapper(getSFA().complement(ALGEBRA));
     }
