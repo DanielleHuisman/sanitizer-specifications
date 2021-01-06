@@ -3,6 +3,7 @@ package io.danielhuisman.sanitizers.language.regex;
 import io.danielhuisman.sanitizers.util.Util;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RegexExpressionOperator extends RegexExpression {
 
@@ -17,6 +18,16 @@ public class RegexExpressionOperator extends RegexExpression {
     public RegexExpressionOperator(Operator operator, List<RegexExpression> expressions) {
         this.operator = operator;
         this.expressions = expressions;
+    }
+
+    @Override
+    public String toRegex() {
+        String regex = expressions
+                .stream()
+                .map(RegexExpression::toRegex)
+                .collect(Collectors.joining(operator == Operator.AND ? "" : "|"));
+
+        return operator == Operator.OR ? String.format("(%s)", regex) : regex;
     }
 
     @Override

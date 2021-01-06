@@ -7,6 +7,7 @@ import io.danielhuisman.sanitizers.language.regex.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -140,16 +141,39 @@ public class RegexListener extends RegexBaseListener {
 
     @Override
     public void exitCharacterClassCharacter(RegexParser.CharacterClassCharacterContext ctx) {
-        set(ctx, new RegexExpressionCharacterClass<>(RegexExpressionCharacterClass.CharacterClassType.CHARACTER, ctx.getText()));
-    }
-
-    @Override
-    public void exitCharacterClassSet(RegexParser.CharacterClassSetContext ctx) {
-        set(ctx, new RegexExpressionCharacterClass<>(RegexExpressionCharacterClass.CharacterClassType.SET, ctx.getText()));
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(StringEscapeUtils.unescapeJava(ctx.CHARACTER().getText()).charAt(0))));
     }
 
     @Override
     public void exitCharacterClassSpecial(RegexParser.CharacterClassSpecialContext ctx) {
-        set(ctx, new RegexExpressionCharacterClass<>(RegexExpressionCharacterClass.CharacterClassType.SPECIAL_CHARACTER, ctx.getText()));
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(ctx.SPECIAL_CHARACTER().getText())));
+    }
+
+    @Override
+    public void exitCharacterClassSet(RegexParser.CharacterClassSetContext ctx) {
+        List<CharacterClass.Range> ranges = ctx.range()
+                .stream()
+                .map((range) -> (CharacterClass.Range) get(range))
+                .collect(Collectors.toList());
+
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, ranges)));
+    }
+
+    @Override
+    public void exitCharacterClassNegatedSet(RegexParser.CharacterClassNegatedSetContext ctx) {
+        List<CharacterClass.Range> ranges = ctx.range()
+                .stream()
+                .map((range) -> (CharacterClass.Range) get(range))
+                .collect(Collectors.toList());
+
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.NEGATED_SET, ranges)));
+    }
+
+    @Override
+    public void exitRange(RegexParser.RangeContext ctx) {
+        char start = StringEscapeUtils.unescapeJava(ctx.CHARACTER().get(0).getText()).charAt(0);
+        char end = ctx.CHARACTER().size() == 1 ? start : StringEscapeUtils.unescapeJava(ctx.CHARACTER().get(1).getText()).charAt(0);
+
+        set(ctx, new CharacterClass.Range(start, end));
     }
 }

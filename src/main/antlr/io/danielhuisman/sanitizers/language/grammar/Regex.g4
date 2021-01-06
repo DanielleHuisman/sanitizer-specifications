@@ -12,9 +12,9 @@ regex: expression EOF;
 
 expression
     : characterClass                    # expressionCharacterClass
-    | expression expression             # expressionAnd
     | expression quantifier             # expressionQuantifier
-    | expression '|' expression          # expressionOr
+    | expression expression             # expressionAnd
+    | expression '|' expression         # expressionOr
     | '(' expression ')'                # expressionParens
     ;
 
@@ -28,12 +28,13 @@ quantifier
     ;
 
 characterClass
-    : set                       # characterClassSet
-    | SPECIAL_CHARACTER         # characterClassSpecial
-    | CHARACTER                 # characterClassCharacter
+    : '[' range* ']'                # characterClassSet
+    | '[' '^' range* ']'            # characterClassNegatedSet
+    | SPECIAL_CHARACTER             # characterClassSpecial
+    | CHARACTER                     # characterClassCharacter
     ;
 
-set
-    : '[' CHARACTER* ']'
-    | '[' '^' CHARACTER* ']'
+range
+    : CHARACTER
+    | CHARACTER '-' CHARACTER
     ;

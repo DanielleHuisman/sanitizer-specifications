@@ -1,23 +1,20 @@
 package io.danielhuisman.sanitizers.language.regex;
 
-public class RegexExpressionCharacterClass<T> extends RegexExpression {
+public class RegexExpressionCharacterClass extends RegexExpression {
 
-    public enum CharacterClassType {
-        CHARACTER,
-        SET,
-        SPECIAL_CHARACTER
+    public CharacterClass characterClass;
+
+    public RegexExpressionCharacterClass(CharacterClass characterClass) {
+        this.characterClass = characterClass;
     }
 
-    public CharacterClassType type;
-    public T value;
-
-    public RegexExpressionCharacterClass(CharacterClassType type, T value) {
-        this.type = type;
-        this.value = value;
+    @Override
+    public String toRegex() {
+        return characterClass.toRegex();
     }
 
     @Override
     public String toString() {
-        return "character class " + type.name() + " " + value.toString();
+        return characterClass.toString();
     }
 }

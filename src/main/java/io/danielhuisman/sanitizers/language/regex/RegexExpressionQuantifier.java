@@ -13,6 +13,14 @@ public class RegexExpressionQuantifier extends RegexExpression {
     }
 
     @Override
+    public String toRegex() {
+        if (!(expression instanceof RegexExpressionCharacterClass)) {
+            return "(" + expression.toRegex() + ")" + quantifier.toRegex();
+        }
+        return expression.toRegex()  + quantifier.toRegex();
+    }
+
+    @Override
     public String toString() {
         return "quantifier\n" +
                 Util.indent(expression.toString()) + "\n" +
