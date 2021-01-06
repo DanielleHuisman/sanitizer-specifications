@@ -33,7 +33,7 @@ public class RegexLanguage {
         // Parse input and use tree listener to generate the program
         ParseTreeWalker walker = new ParseTreeWalker();
         RegexListener listener = new RegexListener(regex);
-        walker.walk(listener, parser.expression());
+        walker.walk(listener, parser.regex());
 
         return regex;
     }
