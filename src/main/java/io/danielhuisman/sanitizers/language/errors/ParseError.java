@@ -1,7 +1,7 @@
 package io.danielhuisman.sanitizers.language.errors;
 
+import io.danielhuisman.sanitizers.language.SourceContainer;
 import io.danielhuisman.sanitizers.util.Util;
-import io.danielhuisman.sanitizers.language.ir.Program;
 import org.antlr.v4.runtime.Token;
 
 public class ParseError {
@@ -30,12 +30,12 @@ public class ParseError {
         return String.format("%s: %s (line %d, column %d)", getClass().getSimpleName(), message, startLine, startColumn);
     }
 
-    public String getMessage(Program program) {
+    public String getMessage(SourceContainer container) {
         String lines;
         if (endLine >= 0 && startLine != endLine) {
-            lines = String.join("\n", program.getSourceLines(startLine, endLine));
+            lines = String.join("\n", container.getSourceLines(startLine, endLine));
         } else {
-            lines = program.getSourceLine(startLine);
+            lines = container.getSourceLine(startLine);
             lines += "\n" + " ".repeat(startColumn) + "^".repeat(endColumn >= 0 ? endColumn - startColumn + 1 : 1);
         }
 
