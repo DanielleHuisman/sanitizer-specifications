@@ -10,6 +10,11 @@ public class Regex extends SourceContainer {
         super(source);
     }
 
+    public Regex(RegexExpression expression) {
+        super("<manual>");
+        this.expression = expression;
+    }
+
     public String toRegex() {
         String regex = expression.toRegex();
         if (regex.startsWith("(") && regex.endsWith(")")) {

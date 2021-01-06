@@ -13,7 +13,7 @@ regex: expression EOF;
 expression
     : characterClass                    # expressionCharacterClass
     | expression quantifier             # expressionQuantifier
-    | expression expression             # expressionAnd
+    | expression expression             # expressionConcat
     | expression '|' expression         # expressionOr
     | '(' expression ')'                # expressionParens
     ;

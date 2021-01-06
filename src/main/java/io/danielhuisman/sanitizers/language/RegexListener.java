@@ -85,13 +85,13 @@ public class RegexListener extends RegexBaseListener {
     }
 
     @Override
-    public void exitExpressionAnd(RegexParser.ExpressionAndContext ctx) {
+    public void exitExpressionConcat(RegexParser.ExpressionConcatContext ctx) {
         List<RegexExpression> expressions = ctx.expression()
                 .stream()
                 .map((expression) -> (RegexExpression) get(expression))
                 .collect(Collectors.toList());
 
-        exitExpressionOperator(ctx, RegexExpressionOperator.Operator.AND, expressions);
+        exitExpressionOperator(ctx, RegexExpressionOperator.Operator.CONCAT, expressions);
     }
 
     @Override

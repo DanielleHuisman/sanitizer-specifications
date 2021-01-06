@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class RegexExpressionOperator extends RegexExpression {
 
     public enum Operator {
-        AND,
+        CONCAT,
         OR
     }
 
@@ -25,7 +25,7 @@ public class RegexExpressionOperator extends RegexExpression {
         String regex = expressions
                 .stream()
                 .map(RegexExpression::toRegex)
-                .collect(Collectors.joining(operator == Operator.AND ? "" : "|"));
+                .collect(Collectors.joining(operator == Operator.CONCAT ? "" : "|"));
 
         return operator == Operator.OR ? String.format("(%s)", regex) : regex;
     }
