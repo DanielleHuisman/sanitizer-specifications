@@ -69,12 +69,18 @@ export range1
 accepts range1 "ABC-123"
 rejects range1 "abc-123"
 
-regexAZ = regex r/[a-z]+0?/r
-export regexAZ
-accepts regexAZ "abc"
-accepts regexAZ "abc0"
-rejects regexAZ "0"
-rejects regexAZ "AB"
+regex1 = regex r/[a-z]+0?/r
+export regex1
+accepts regex1 "abc"
+accepts regex1 "abc0"
+rejects regex1 "0"
+rejects regex1 "AB"
+
+regex2 = regex r/[a-zA-Z0-9._%\+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,63}/r
+accepts regex2 "daniel@huisman.me"
+accepts regex2 "da+test@test.nl"
+rejects regex2 "danielhuisman.me"
+rejects regex2 "da@test"
 
 /* SFTs */
 
