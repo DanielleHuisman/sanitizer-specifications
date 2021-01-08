@@ -12,6 +12,7 @@ import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionGenerator;
 import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionIdentifier;
 import io.danielhuisman.sanitizers.language.ir.expressions.ExpressionOperator;
 import io.danielhuisman.sanitizers.language.ir.statements.*;
+import io.danielhuisman.sanitizers.language.regex.Regex;
 import io.danielhuisman.sanitizers.util.Tuple;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
@@ -80,6 +81,11 @@ public class LanguageListener extends LanguageBaseListener {
 
     @Override
     public void exitStatementAssert(LanguageParser.StatementAssertContext ctx) {
+        if (ctx.identifier() == null || ctx.STRING() == null) {
+            program.addError(new SyntaxError(ctx.start, ctx.stop, "Assert statement is missing identifier or string"));
+            return;
+        }
+
         String input = ctx.STRING().getText();
 
         set(ctx, new StatementAssert(
@@ -93,8 +99,13 @@ public class LanguageListener extends LanguageBaseListener {
 
     @Override
     public void exitStatementTest(LanguageParser.StatementTestContext ctx) {
-        String input = ctx.STRING().size() >= 1 ? ctx.STRING().get(0).getText() : null;
-        String output = ctx.STRING().size() >= 2 ? ctx.STRING().get(1).getText() : null;
+        if (ctx.identifier() == null || ctx.STRING() == null || ctx.STRING().size() < 2) {
+            program.addError(new SyntaxError(ctx.start, ctx.stop, "Test statement is missing identifier, input string or output string"));
+            return;
+        }
+
+        String input = ctx.STRING().get(0).getText();
+        String output = ctx.STRING().get(1).getText();
 
         set(ctx, new StatementTest(
                 ctx.start,
@@ -199,6 +210,12 @@ public class LanguageListener extends LanguageBaseListener {
     public void exitPrimitiveString(LanguageParser.PrimitiveStringContext ctx) {
         String s = ctx.getText().substring(1, ctx.getText().length() - 1);
         set(ctx, new Primitive<>(String.class, StringEscapeUtils.unescapeJava(s)));
+    }
+
+    @Override
+    public void exitPrimitiveRegex(LanguageParser.PrimitiveRegexContext ctx) {
+        String s = ctx.getText().substring(2, ctx.getText().length() - 2);
+        set(ctx, new Primitive<>(Regex.class, RegexLanguage.parseString(s)));
     }
 
     @Override

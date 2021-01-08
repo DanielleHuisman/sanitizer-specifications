@@ -46,14 +46,14 @@ public class Language {
     }
 
     public static boolean process(Program program) {
-        System.out.println(program);
-
         // Check for errors
         if (program.getErrors().size() > 0) {
             System.err.println(program.getFormattedErrors());
+            System.out.println(program);
             return false;
         }
 
+        System.out.println(program);
         return true;
     }
 

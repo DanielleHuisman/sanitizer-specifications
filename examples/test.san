@@ -69,6 +69,13 @@ export range1
 accepts range1 "ABC-123"
 rejects range1 "abc-123"
 
+regexAZ = regex r/[a-z]+0?/r
+export regexAZ
+accepts regexAZ "abc"
+accepts regexAZ "abc0"
+rejects regexAZ "0"
+rejects regexAZ "AB"
+
 /* SFTs */
 
 trim = trim 4

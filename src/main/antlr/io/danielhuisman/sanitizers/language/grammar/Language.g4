@@ -13,7 +13,8 @@ fragment DASH: [-_];
 INTEGER: DIGIT+;
 CHAR: '\'' ( '\\\'' | '\\'? . ) '\'';
 STRING: '"' ( '\\"' | '\\\\' | ~[\\"\r\n] )* '"';
-// TODO: check if char and string are valid and UTF-8 capable
+REGEX: 'r/' ( ~[\r\n] )+ '/r';
+// TODO: check if char, string and regex are valid and UTF-8 capable
 
 // Operators
 ASSIGN: '=';
@@ -51,6 +52,7 @@ primitive
     : INTEGER                                           # primitiveInteger
     | CHAR                                              # primitiveCharacter
     | STRING                                            # primitiveString
+    | REGEX                                             # primitiveRegex
     | LEFT_PAREN (primitive COMMA?)* RIGHT_PAREN        # primitiveTuple
     | LEFT_BRACKET (primitive COMMA?)* RIGHT_BRACKET    # primitiveList
     ;

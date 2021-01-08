@@ -13,7 +13,8 @@ public class LanguageTest {
 
             Language.runString(
                     "test1 = length (\"=\", 10)\nexport test1\ntest2 = word (\"equals\", \"abc\")\n" +
-                    "accepts test2 \"abc\"\nrejects test2 \"def\""
+                    "accepts test2 \"abc\"\nrejects test2 \"def\"\n" +
+                    "test3 = regex r/[a-z/]r//r"
             );
 
             Language.runFile("examples/test.san");

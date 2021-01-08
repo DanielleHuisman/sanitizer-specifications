@@ -1,5 +1,6 @@
 package io.danielhuisman.sanitizers.language.ir;
 
+import io.danielhuisman.sanitizers.language.regex.Regex;
 import io.danielhuisman.sanitizers.util.Tuple;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -42,9 +43,11 @@ public class Primitive<T> {
     public String toString() {
         String val = value.toString();
         if (type == Character.class) {
-            val = "'" + StringEscapeUtils.escapeJava(value.toString()) + "'";
+            val = "'" + StringEscapeUtils.escapeJava(val) + "'";
         } else if (type == String.class) {
-            val = "\"" + StringEscapeUtils.escapeJava(value.toString()) + "\"";
+            val = "\"" + StringEscapeUtils.escapeJava(val) + "\"";
+        } else if (type == Regex.class) {
+            val = ((Regex) value).toRegex();
         }
 
         return "primitive " + type.getSimpleName().toLowerCase() + " " + val;
