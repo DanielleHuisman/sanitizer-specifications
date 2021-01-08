@@ -55,7 +55,8 @@ public class Main {
                             generatorWordList.generate(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, List.of("abc"))),
                             generatorLength.generate(Pair.of(GeneratorRange.Operator.GREATER_THAN, 2)),
                             generatorLength.generate(Pair.of(GeneratorRange.Operator.LESS_THAN_OR_EQUALS, 10))
-                    )
+                    ),
+                    true
             );
             sfa.createDotFile("not_contains_abc_gt_2_lte_10", "combined/");
 
@@ -77,7 +78,8 @@ public class Main {
                     List.of(
                             generatorWord.generate(Pair.of(GeneratorWord.Operator.EQUALS, "abc")),
                             generatorWord.generate(Pair.of(GeneratorWord.Operator.EQUALS, "def"))
-                    )
+                    ),
+                    true
             );
             sfa.createDotFile("abc_def", "concat/");
 

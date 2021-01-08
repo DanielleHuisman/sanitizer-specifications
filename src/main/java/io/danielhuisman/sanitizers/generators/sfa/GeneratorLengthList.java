@@ -38,9 +38,11 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
                             inputAnd
                                     .stream()
                                     .map(Util.wrapper(generatorLength::generate))
-                                    .collect(Collectors.toList())
+                                    .collect(Collectors.toList()),
+                            false
                     )))
-                    .collect(Collectors.toList())
+                    .collect(Collectors.toList()),
+                true
         );
     }
 

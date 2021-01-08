@@ -129,7 +129,7 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
         return new SFAWrapper(getSFA().intersectionWith(other.getSFA(), ALGEBRA));
     }
 
-    public static SFAWrapper concatenate(Collection<SFAWrapper> sfas) throws TimeoutException {
+    public static SFAWrapper concatenate(Collection<SFAWrapper> sfas, boolean minimize) throws TimeoutException {
         if (sfas.size() == 0) {
             throw new RuntimeException("At least one SFA must be provided.");
         }
@@ -142,10 +142,10 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
                 result = result.concatenateWith(sfa);
             }
         }
-        return result.minimize();
+        return minimize ? result.minimize() : result;
     }
 
-    public static SFAWrapper union(Collection<SFAWrapper> sfas) throws TimeoutException {
+    public static SFAWrapper union(Collection<SFAWrapper> sfas, boolean minimize) throws TimeoutException {
         if (sfas.size() == 0) {
             throw new RuntimeException("At least one SFA must be provided.");
         }
@@ -158,10 +158,10 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
                 result = result.unionWith(sfa);
             }
         }
-        return result.minimize();
+        return minimize ? result.minimize() : result;
     }
 
-    public static SFAWrapper intersection(Collection<SFAWrapper> sfas) throws TimeoutException {
+    public static SFAWrapper intersection(Collection<SFAWrapper> sfas, boolean minimize) throws TimeoutException {
         if (sfas.size() == 0) {
             throw new RuntimeException("At least one SFA must be provided.");
         }
@@ -174,6 +174,6 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
                 result = result.intersectionWith(sfa);
             }
         }
-        return result.minimize();
+        return minimize ? result.minimize() : result;
     }
 }

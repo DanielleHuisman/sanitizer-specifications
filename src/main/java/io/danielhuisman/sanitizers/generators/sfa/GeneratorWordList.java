@@ -44,7 +44,7 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
                 .collect(Collectors.toList());
 
         // Combine SFAs using intersection or union
-        return intersection ? SFAWrapper.intersection(sfas) : SFAWrapper.union(sfas);
+        return intersection ? SFAWrapper.intersection(sfas, true) : SFAWrapper.union(sfas, true);
     }
 
     @Override

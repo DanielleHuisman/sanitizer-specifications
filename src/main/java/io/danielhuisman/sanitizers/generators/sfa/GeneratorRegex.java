@@ -26,7 +26,7 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
 
     @Override
     public SFAWrapper generate(Regex input) throws TimeoutException {
-        return generate(input.expression).cleanUp();
+        return generate(input.expression).minimize().cleanUp();
     }
 
     private SFAWrapper generate(RegexExpression expression) throws TimeoutException {
@@ -45,7 +45,8 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                     .collect(Collectors.joining("\n"))
             );
 
-            var combined = expressionOperator.operator == RegexExpressionOperator.Operator.OR ? SFAWrapper.union(expressions) : SFAWrapper.concatenate(expressions);
+            var combined = expressionOperator.operator == RegexExpressionOperator.Operator.OR ?
+                    SFAWrapper.union(expressions, false) : SFAWrapper.concatenate(expressions, false);
             System.out.println("result:");
             System.out.println(combined.cleanUp().getSFA().getTransitions());
             System.out.println();
@@ -81,6 +82,11 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                                 offset + transition.from,
                                 offset + transition.to,
                                 ((SFAInputMove<CharPred, Character>) transition).guard
+                        ));
+                    } else if (transition instanceof SFAEpsilon) {
+                        transitions.add(new SFAEpsilon<>(
+                                offset + transition.from,
+                                offset + transition.to
                         ));
                     } else {
                         throw new UnsupportedOperationException(
@@ -128,7 +134,7 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
             System.out.println(transitions);
             System.out.println();
 
-            return new SFAWrapper(transitions, sfa.getSFA().getInitialState(), finalStates, false).minimize();
+            return new SFAWrapper(transitions, sfa.getSFA().getInitialState(), finalStates, false);
         } else if (expression instanceof RegexExpressionCharacterClass) {
             var expressionCharacterClass = (RegexExpressionCharacterClass) expression;
 
@@ -203,7 +209,10 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
         ))));
 
         examples.add(Pair.of("complex_1", generate(RegexLanguage.parseString("[a-z]+0?"))));
-        examples.add(Pair.of("complex_2", generate(RegexLanguage.parseString("[a-z]+0?|2(9{1,}|(45|_{2,3})+)|&"))));
+        examples.add(Pair.of("complex_2", generate(RegexLanguage.parseString("(45|_{3})+"))));
+        examples.add(Pair.of("complex_3", generate(RegexLanguage.parseString("[a-z]+0?|2(9{1,}|(45|_{3})+)|&"))));
+        examples.add(Pair.of("email_1", generate(RegexLanguage.parseString("[A-Z0-9._%\\+\\-]+@[A-Z0-9.\\-]+\\.[A-Z]{2,}"))));
+        examples.add(Pair.of("email_2", generate(RegexLanguage.parseString("[a-zA-Z0-9._%\\+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,63}"))));
 
         return examples;
     }

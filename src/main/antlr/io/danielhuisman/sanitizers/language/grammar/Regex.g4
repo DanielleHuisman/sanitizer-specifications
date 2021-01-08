@@ -4,9 +4,13 @@ grammar Regex;
 package io.danielhuisman.sanitizers.language.grammar;
 }
 
+DASH: '-';
 DIGIT: [0-9];
-CHARACTER: DIGIT | [a-zA-Z!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~ _\-];
+CHARACTER: [a-zA-Z!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~ _];
+ESCAPED_CHARACTER: '\\.' | '\\-' | '\\+' | '\\\\';
 SPECIAL_CHARACTER: '.' | '\\w' | '\\W' | '\\d' | '\\D' | '\\s' | '\\S';
+
+character: DIGIT | CHARACTER | ESCAPED_CHARACTER;
 
 regex: expression EOF;
 
@@ -31,11 +35,10 @@ characterClass
     : '[' range* ']'                # characterClassSet
     | '[' '^' range* ']'            # characterClassNegatedSet
     | SPECIAL_CHARACTER             # characterClassSpecial
-    | CHARACTER                     # characterClassCharacter
-    | DIGIT                         # characterClassCharacter
+    | character                     # characterClassCharacter
     ;
 
 range
-    : CHARACTER
-    | CHARACTER '-' CHARACTER
+    : character
+    | character DASH character
     ;

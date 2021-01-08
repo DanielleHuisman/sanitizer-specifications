@@ -126,7 +126,7 @@ public class RegexListener extends RegexBaseListener {
             max = 1;
         } else if (!text.contains(",")) {
             min = Integer.parseInt(text.substring(1, text.length() - 1));
-            max = -1;
+            max = min;
         } else {
             min = Integer.parseInt(text.substring(1, text.indexOf(",")));
             if (text.contains(",}")) {
@@ -141,7 +141,15 @@ public class RegexListener extends RegexBaseListener {
 
     @Override
     public void exitCharacterClassCharacter(RegexParser.CharacterClassCharacterContext ctx) {
-        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(StringEscapeUtils.unescapeJava(ctx.getText()).charAt(0))));
+        String text = ctx.getText();
+
+        if (text.startsWith("\\")) {
+            text = text.substring(1);
+        }
+
+        System.out.println(text);
+
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(text.charAt(0))));
     }
 
     @Override
@@ -171,7 +179,7 @@ public class RegexListener extends RegexBaseListener {
 
     @Override
     public void exitRange(RegexParser.RangeContext ctx) {
-        var chars = ctx.CHARACTER();
+        var chars = ctx.character();
 
         char start = StringEscapeUtils.unescapeJava(chars.get(0).getText()).charAt(0);
         char end = chars.size() == 1 ? start : StringEscapeUtils.unescapeJava(chars.get(1).getText()).charAt(0);

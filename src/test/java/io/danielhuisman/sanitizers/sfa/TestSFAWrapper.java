@@ -10,16 +10,16 @@ public class TestSFAWrapper {
 
     @Test
     public void testConcatenate() {
-        assertThrows(RuntimeException.class, () -> SFAWrapper.concatenate(List.of()));
+        assertThrows(RuntimeException.class, () -> SFAWrapper.concatenate(List.of(), false));
     }
 
     @Test
     public void testUnion() {
-        assertThrows(RuntimeException.class, () -> SFAWrapper.union(List.of()));
+        assertThrows(RuntimeException.class, () -> SFAWrapper.union(List.of(), false));
     }
 
     @Test
     public void testIntersection() {
-        assertThrows(RuntimeException.class, () -> SFAWrapper.intersection(List.of()));
+        assertThrows(RuntimeException.class, () -> SFAWrapper.intersection(List.of(), false));
     }
 }
