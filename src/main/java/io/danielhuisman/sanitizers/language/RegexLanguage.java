@@ -6,6 +6,7 @@ import io.danielhuisman.sanitizers.language.regex.Regex;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -25,6 +26,16 @@ public class RegexLanguage {
         lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
 
+        RegexLexer printLexer = new RegexLexer(CharStreams.fromString(chars.getText(new Interval(0, chars.size()))));
+        while (true) {
+            Token token = printLexer.nextToken();
+            if (token == null || token.getType() == Token.EOF) {
+                break;
+            }
+
+            System.out.println(RegexLexer.ruleNames[token.getType()] + " " + token.getText());
+        }
+
         // Create parser
         RegexParser parser = new RegexParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
@@ -32,21 +43,20 @@ public class RegexLanguage {
 
         // Parse input and use tree listener to generate the program
         ParseTreeWalker walker = new ParseTreeWalker();
-        RegexListener listener = new RegexListener(regex);
+        RegexListener listener = new RegexListener(parser, regex);
         walker.walk(listener, parser.regex());
 
-        return regex;
-    }
-
-    public static boolean process(Regex regex) {
         System.out.println(regex);
+        System.out.println("Input: " + regex.getSourceLine(1));
+        System.out.println("Output: " + regex.toRegex());
+        System.out.println();
 
         // Check for errors
         if (regex.getErrors().size() > 0) {
             System.err.println(regex.getFormattedErrors());
-            return false;
+            return null;
         }
 
-        return true;
+        return regex;
     }
 }

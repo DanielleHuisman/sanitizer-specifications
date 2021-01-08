@@ -141,7 +141,7 @@ public class RegexListener extends RegexBaseListener {
 
     @Override
     public void exitCharacterClassCharacter(RegexParser.CharacterClassCharacterContext ctx) {
-        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(StringEscapeUtils.unescapeJava(ctx.CHARACTER().getText()).charAt(0))));
+        set(ctx, new RegexExpressionCharacterClass(new CharacterClass(StringEscapeUtils.unescapeJava(ctx.getText()).charAt(0))));
     }
 
     @Override
@@ -171,8 +171,10 @@ public class RegexListener extends RegexBaseListener {
 
     @Override
     public void exitRange(RegexParser.RangeContext ctx) {
-        char start = StringEscapeUtils.unescapeJava(ctx.CHARACTER().get(0).getText()).charAt(0);
-        char end = ctx.CHARACTER().size() == 1 ? start : StringEscapeUtils.unescapeJava(ctx.CHARACTER().get(1).getText()).charAt(0);
+        var chars = ctx.CHARACTER();
+
+        char start = StringEscapeUtils.unescapeJava(chars.get(0).getText()).charAt(0);
+        char end = chars.size() == 1 ? start : StringEscapeUtils.unescapeJava(chars.get(1).getText()).charAt(0);
 
         set(ctx, new CharacterClass.Range(start, end));
     }

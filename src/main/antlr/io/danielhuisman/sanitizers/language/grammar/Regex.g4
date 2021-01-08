@@ -4,8 +4,8 @@ grammar Regex;
 package io.danielhuisman.sanitizers.language.grammar;
 }
 
-INTEGER: [0-9]+;
-CHARACTER: [0-9a-zA-Z!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~ ];
+DIGIT: [0-9];
+CHARACTER: DIGIT | [a-zA-Z!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~ _\-];
 SPECIAL_CHARACTER: '.' | '\\w' | '\\W' | '\\d' | '\\D' | '\\s' | '\\S';
 
 regex: expression EOF;
@@ -22,9 +22,9 @@ quantifier
     : '*'
     | '+'
     | '?'
-    | '{' INTEGER '}'
-    | '{' INTEGER ',' '}'
-    | '{' INTEGER ',' INTEGER '}'
+    | '{' DIGIT+ '}'
+    | '{' DIGIT+ ',' '}'
+    | '{' DIGIT+ ',' DIGIT+ '}'
     ;
 
 characterClass
@@ -32,6 +32,7 @@ characterClass
     | '[' '^' range* ']'            # characterClassNegatedSet
     | SPECIAL_CHARACTER             # characterClassSpecial
     | CHARACTER                     # characterClassCharacter
+    | DIGIT                         # characterClassCharacter
     ;
 
 range

@@ -44,17 +44,17 @@ public class ExpressionOperator extends Expression {
                 throw new RuntimeException("Automaton is not an SFA");
             case AND:
                 if (automatons.get(0) instanceof SFAWrapper) {
-                    return ((SFAWrapper) automatons.get(0)).intersectionWith((SFAWrapper) automatons.get(1)).minimize();
+                    return ((SFAWrapper) automatons.get(0)).intersectionWith((SFAWrapper) automatons.get(1)).minimize().cleanUp();
                 }
                 throw new RuntimeException("Automatons are not SFAs");
             case OR:
                 if (automatons.get(0) instanceof SFAWrapper) {
-                    return ((SFAWrapper) automatons.get(0)).unionWith((SFAWrapper) automatons.get(1)).minimize();
+                    return ((SFAWrapper) automatons.get(0)).unionWith((SFAWrapper) automatons.get(1)).minimize().cleanUp();
                 }
                 throw new RuntimeException("Automatons are not SFAs");
             case PLUS:
                 if (automatons.get(0) instanceof SFAWrapper) {
-                    return ((SFAWrapper) automatons.get(0)).concatenateWith((SFAWrapper) automatons.get(1)).minimize();
+                    return ((SFAWrapper) automatons.get(0)).concatenateWith((SFAWrapper) automatons.get(1)).minimize().cleanUp();
                 }
                 throw new RuntimeException("Automatons are not SFAs");
         }

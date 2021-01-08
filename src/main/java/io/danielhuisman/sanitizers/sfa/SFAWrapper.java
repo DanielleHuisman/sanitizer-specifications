@@ -12,7 +12,9 @@ import theory.intervals.UnaryCharIntervalSolver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,6 +90,31 @@ public class SFAWrapper implements AutomatonWrapper<CharPred, Character> {
 
     public SFAWrapper minimize() throws TimeoutException {
         return new SFAWrapper(getSFA().minimize(ALGEBRA));
+    }
+
+    public SFAWrapper cleanUp() throws TimeoutException {
+        // Find useless state, i.e. non-final states with only incoming transitions or self transitions
+        List<Integer> uselessStates = new ArrayList<>();
+        for (int state : getSFA().getNonFinalStates()) {
+            var moves = getSFA().getMovesFrom(state);
+
+            if (moves.size() == 0 || (moves.size() == 1 && moves.iterator().next().to == state)) {
+                uselessStates.add(state);
+            }
+        }
+
+        // Exclude transitions to useless states
+        Collection<SFAMove<CharPred, Character>> transitions = new LinkedList<>();
+        for (var transition : getSFA().getTransitions()) {
+            if (!uselessStates.contains(transition.to)) {
+                transitions.add(transition);
+            }
+        }
+
+        // TODO: consider compressing state numbers
+
+        // Create the new SFA
+        return new SFAWrapper(transitions, getSFA().getInitialState(), getSFA().getFinalStates());
     }
 
     public SFAWrapper concatenateWith(SFAWrapper other) throws TimeoutException {

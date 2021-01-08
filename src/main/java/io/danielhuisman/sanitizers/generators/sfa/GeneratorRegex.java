@@ -1,7 +1,9 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
+import automata.sfa.SFAEpsilon;
 import automata.sfa.SFAInputMove;
 import automata.sfa.SFAMove;
+import io.danielhuisman.sanitizers.language.RegexLanguage;
 import io.danielhuisman.sanitizers.language.regex.*;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import io.danielhuisman.sanitizers.util.Util;
@@ -24,7 +26,7 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
 
     @Override
     public SFAWrapper generate(Regex input) throws TimeoutException {
-        return generate(input.expression);
+        return generate(input.expression).cleanUp();
     }
 
     private SFAWrapper generate(RegexExpression expression) throws TimeoutException {
@@ -36,9 +38,18 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                     .map(Util.wrapper(this::generate))
                     .collect(Collectors.toList());
 
-            // TODO: debug weird merges
+            System.out.println("combine " + expressionOperator.operator + ":");
+            System.out.println(expressions
+                    .stream()
+                    .map(Util.wrapper((s) -> s.cleanUp().getSFA().getTransitions().toString()))
+                    .collect(Collectors.joining("\n"))
+            );
 
-            return expressionOperator.operator == RegexExpressionOperator.Operator.OR ? SFAWrapper.union(expressions) : SFAWrapper.concatenate(expressions);
+            var combined = expressionOperator.operator == RegexExpressionOperator.Operator.OR ? SFAWrapper.union(expressions) : SFAWrapper.concatenate(expressions);
+            System.out.println("result:");
+            System.out.println(combined.cleanUp().getSFA().getTransitions());
+            System.out.println();
+            return combined;
         } else if (expression instanceof RegexExpressionQuantifier) {
             var expressionQuantifier = (RegexExpressionQuantifier) expression;
             var quantifier = expressionQuantifier.quantifier;
@@ -48,15 +59,76 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                 return sfa;
             }
 
-            // TODO: modify SFA with quantifier
+            var originalInitialState = sfa.getSFA().getInitialState();
+            var originalFinalStates = sfa.getSFA().getFinalStates();
+            var originalTransitions = sfa.getSFA().getTransitions();
 
-            // Steps:
-            // - Clone original SFA
-            // - Remove final states from prev/original SFA
-            // - Add transitions between prev/original SFA final states and cloned SFA inputs
-            // - Repeat n times to satisfy quantifier and handle open end if necessary
+            Collection<SFAMove<CharPred, Character>> transitions = new LinkedList<>();
+            Collection<Integer> finalStates = new HashSet<>();
 
-            return null;
+            // Calculate the amount of SFA copies required
+            int count = quantifier.max < 0 ? quantifier.min : quantifier.max;
+
+            for (int i = 0; i < count; i++) {
+                // Calculate offsets
+                int offset = (1 + originalTransitions.size()) * i;
+                int nextOffset = (1 + originalTransitions.size()) * (i + 1);
+
+                // Copy original SFA with an offset
+                for (var transition : originalTransitions) {
+                    if (transition instanceof SFAInputMove) {
+                        transitions.add(new SFAInputMove<>(
+                                offset + transition.from,
+                                offset + transition.to,
+                                ((SFAInputMove<CharPred, Character>) transition).guard
+                        ));
+                    } else {
+                        throw new UnsupportedOperationException(
+                                String.format("SFAMove of type \"%s\" is not supported", transition.getClass().getSimpleName())
+                        );
+                    }
+                }
+
+                // Connect final states of this sub-SFA to the initial state of the next sub-SFA
+                if (i < count - 1) {
+                    for (int state : originalFinalStates) {
+                        transitions.add(new SFAEpsilon<>(offset + state, nextOffset + originalInitialState));
+                    }
+                }
+            }
+
+            // Calculate offset of last sub-SFA
+            int lastOffset = (1 + originalTransitions.size()) * (count - 1);
+
+            // Connect initial state to the final states of the last sub-SFA
+            if (quantifier.min == 0) {
+                for (int state : originalFinalStates) {
+                    transitions.add(new SFAEpsilon<>(originalInitialState, lastOffset + state));
+                }
+            }
+
+            // Connect final states of the last sub-SFA to the initial state of the last sub-SFA, i.e. self-transition on the last sub-SFA
+            if (quantifier.max < 0) {
+                for (int state : originalFinalStates) {
+                    transitions.add(new SFAEpsilon<>(lastOffset + state, lastOffset + originalInitialState));
+                }
+            }
+
+            // Mark the final states of the relevant sub-SFAs as final states for the new SFA
+            for (int i = Math.max(quantifier.min, 1); i <= count; i++) {
+                int offset = (1 + originalTransitions.size()) * (i - 1);
+
+                for (int state : originalFinalStates) {
+                    finalStates.add(offset + state);
+                }
+            }
+
+            System.out.println("Quantifier: " + quantifier);
+            System.out.println("Final: " + finalStates);
+            System.out.println(transitions);
+            System.out.println();
+
+            return new SFAWrapper(transitions, sfa.getSFA().getInitialState(), finalStates, false).minimize();
         } else if (expression instanceof RegexExpressionCharacterClass) {
             var expressionCharacterClass = (RegexExpressionCharacterClass) expression;
 
@@ -96,10 +168,10 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                 new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('a', 'z')))))
         )));
 
-        examples.add(Pair.of("a_z_plus", generate(new Regex(
+        examples.add(Pair.of("a_z_3_to_5", generate(new Regex(
                 new RegexExpressionQuantifier(
                         new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('a', 'z')))),
-                        new Quantifier(1, -1)
+                        new Quantifier(3, 5)
                 )
         ))));
 
@@ -109,6 +181,29 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
                         new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('0', '9'))))
                 )))
         )));
+
+        examples.add(Pair.of("a_z_0_9_3_plus", generate(new Regex(
+                new RegexExpressionQuantifier(
+                    new RegexExpressionOperator(RegexExpressionOperator.Operator.CONCAT, List.of(
+                            new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('a', 'z')))),
+                            new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('0', '9'))))
+                    )),
+                    new Quantifier(3, -1)
+                )
+        ))));
+
+        examples.add(Pair.of("a_z_0_9_2_to_4", generate(new Regex(
+                new RegexExpressionQuantifier(
+                        new RegexExpressionOperator(RegexExpressionOperator.Operator.CONCAT, List.of(
+                                new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('a', 'z')))),
+                                new RegexExpressionCharacterClass(new CharacterClass(CharacterClass.Type.SET, List.of(new CharacterClass.Range('0', '9'))))
+                        )),
+                        new Quantifier(2, 4)
+                )
+        ))));
+
+        examples.add(Pair.of("complex_1", generate(RegexLanguage.parseString("[a-z]+0?"))));
+        examples.add(Pair.of("complex_2", generate(RegexLanguage.parseString("[a-z]+0?|2(9{1,}|(45|_{2,3})+)|&"))));
 
         return examples;
     }
