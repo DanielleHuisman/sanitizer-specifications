@@ -84,6 +84,10 @@ rejects regex2 "da@test"
 
 /* SFTs */
 
+cheese = constant "cheese"
+export cheese
+outputs cheese "test" "cheese"
+
 trim = trim 4
 
 export trim
