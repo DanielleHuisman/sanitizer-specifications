@@ -27,15 +27,12 @@ public class GeneratorTrim extends SFTGenerator<Integer> {
 
         // Generate length amount of states with true transitions between them with identity output
         for (int i = 0; i < length; i++) {
-            List<CharFunc> output = new LinkedList<>();
-            output.add(CharOffset.IDENTITY);
-
-            transitions.add(new SFTInputMove<>(i, i + 1, SFTWrapper.ALGEBRA.True(), output));
+            transitions.add(new SFTInputMove<>(i, i + 1, SFTWrapper.ALGEBRA.True(), List.of(CharOffset.IDENTITY)));
             finalStatesAndTails.put(i, new HashSet<>());
         }
 
         // Add transition to self for final state without output
-        transitions.add(new SFTInputMove<>(length, length, SFTWrapper.ALGEBRA.True(), new LinkedList<>()));
+        transitions.add(new SFTInputMove<>(length, length, SFTWrapper.ALGEBRA.True(), List.of()));
         finalStatesAndTails.put(length, new HashSet<>());
 
         return new SFTWrapper(transitions, 0, finalStatesAndTails);

@@ -29,6 +29,11 @@ public class GeneratorConstant extends SFTGenerator<String> {
 
         // Add transition with constant output
         transitions.add(new SFTInputMove<>(0, 1, SFTWrapper.ALGEBRA.True(), chars));
+
+        // Add true transition to self without output
+        transitions.add(new SFTInputMove<>(1, 1, SFTWrapper.ALGEBRA.True(), List.of()));
+
+        // Mark last state as final
         finalStatesAndTails.put(1, new HashSet<>());
 
         return new SFTWrapper(transitions, 0, finalStatesAndTails);
