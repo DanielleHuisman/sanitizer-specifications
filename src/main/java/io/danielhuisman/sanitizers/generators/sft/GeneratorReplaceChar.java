@@ -84,9 +84,4 @@ public class GeneratorReplaceChar extends SFTStringGenerator<Collection<Pair<Cha
                 .map(inputRange -> String.format("%s -> \"%s\"", inputRange.getLeft().toString(), StringEscapeUtils.escapeJava(inputRange.getRight())))
                 .collect(Collectors.joining(", ")));
     }
-
-    @Override
-    public Collection<Pair<CharPred, String>> parse(String input) {
-        return null;
-    }
 }

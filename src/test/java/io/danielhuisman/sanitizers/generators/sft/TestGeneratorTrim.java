@@ -33,12 +33,4 @@ public class TestGeneratorTrim {
         assertEquals("trim 3", generator.format(3));
         assertEquals("trim 10", generator.format(10));
     }
-
-    @Test
-    public void testParse() {
-        assertEquals(3, generator.parse("trim 3"));
-        assertEquals(10, generator.parse("trim 10"));
-        assertNull(generator.parse("trm"));
-        assertNull(generator.parse("trim d"));
-    }
 }

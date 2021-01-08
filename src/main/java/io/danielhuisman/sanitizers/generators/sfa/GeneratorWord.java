@@ -95,18 +95,4 @@ public class GeneratorWord extends SFAGenerator<Pair<GeneratorWord.Operator, Str
     public String format(Pair<Operator, String> input) {
         return String.format("%s \"%s\"", input.getLeft().name().toLowerCase(), StringEscapeUtils.escapeJava(input.getRight()));
     }
-
-    @Override
-    public Pair<Operator, String> parse(String input) {
-        String[] split = input.split(" ", 2);
-        if (split.length == 2) {
-            Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
-            if (operator.isPresent()) {
-                if (split[1].startsWith("\"") && split[1].endsWith("\"")) {
-                    return Pair.of(operator.get(), StringEscapeUtils.unescapeJava(split[1].substring(1, split[1].length() - 1)));
-                }
-            }
-        }
-        return null;
-    }
 }

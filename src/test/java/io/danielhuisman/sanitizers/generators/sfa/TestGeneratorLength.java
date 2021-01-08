@@ -127,12 +127,4 @@ public class TestGeneratorLength {
         assertEquals("equals 3", generator.format(Pair.of(GeneratorRange.Operator.EQUALS, 3)));
         assertEquals("less_than 10", generator.format(Pair.of(GeneratorRange.Operator.LESS_THAN, 10)));
     }
-
-    @Test
-    public void testParse() {
-        assertEquals(Pair.of(GeneratorRange.Operator.EQUALS, 3), generator.parse("equals 3"));
-        assertEquals(Pair.of(GeneratorRange.Operator.LESS_THAN, 10), generator.parse("less_than 10"));
-        assertNull(generator.parse("equls"));
-        assertNull(generator.parse("equals d"));
-    }
 }

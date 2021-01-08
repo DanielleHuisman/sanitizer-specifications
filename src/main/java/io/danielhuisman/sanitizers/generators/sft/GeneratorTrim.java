@@ -54,19 +54,4 @@ public class GeneratorTrim extends SFTGenerator<Integer> {
     public String format(Integer input) {
         return String.format("trim %d", input);
     }
-
-    @Override
-    public Integer parse(String input) {
-        String[] split = input.split(" ");
-        if (split.length == 2) {
-            if (split[0].equals("trim")) {
-                try {
-                    return Integer.parseInt(split[1]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-        }
-        return null;
-    }
 }

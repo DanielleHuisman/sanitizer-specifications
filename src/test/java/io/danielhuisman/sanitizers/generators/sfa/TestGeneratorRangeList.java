@@ -1,6 +1,5 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorRangeList;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -58,17 +57,4 @@ public class TestGeneratorRangeList {
                 )
         ));
     }
-
-//    @Test
-//    public void testParse() {
-//        assertEquals(List.of(
-//                Pair.of(new CharPred('A', 'Z'), 10)
-//        ), generator.parse("[[A-Z] x10]"));
-//
-//        assertEquals(List.of(
-//                Pair.of(new CharPred('A', 'Z'), 3),
-//                Pair.of(new CharPred('-', '\\'), 1),
-//                Pair.of(new CharPred('0', '9'), 2)
-//        ), generator.parse("[[A-Z] x3, [\\--\\\\] x1, [0-9] x2]"));
-//    }
 }

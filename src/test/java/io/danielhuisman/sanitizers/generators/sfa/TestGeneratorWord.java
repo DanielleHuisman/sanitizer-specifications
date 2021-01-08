@@ -1,6 +1,5 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorWord;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -108,14 +107,5 @@ public class TestGeneratorWord {
         assertEquals("equals \"abc\"", generator.format(Pair.of(GeneratorWord.Operator.EQUALS, "abc")));
         assertEquals("not_equals \" </script>\"", generator.format(Pair.of(GeneratorWord.Operator.NOT_EQUALS, " </script>")));
         assertEquals("not_contains \"'\\\"' \\n\\\\n\"", generator.format(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, "'\"' \n\\n")));
-    }
-
-    @Test
-    public void testParse() {
-        assertEquals(Pair.of(GeneratorWord.Operator.EQUALS, "abc"), generator.parse("equals \"abc\""));
-        assertEquals(Pair.of(GeneratorWord.Operator.NOT_EQUALS, " </script>"), generator.parse("not_equals \" </script>\""));
-        assertEquals(Pair.of(GeneratorWord.Operator.NOT_CONTAINS, "'\"' \n\\n"), generator.parse("not_contains \"'\\\"' \\n\\\\n\""));
-        assertNull(generator.parse("equls"));
-        assertNull(generator.parse("equals d"));
     }
 }

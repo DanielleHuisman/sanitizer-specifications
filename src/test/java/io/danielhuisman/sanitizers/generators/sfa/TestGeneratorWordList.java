@@ -96,10 +96,4 @@ public class TestGeneratorWordList {
         assertEquals("contains [\"abc\"]", generator.format(Pair.of(GeneratorWord.Operator.CONTAINS, List.of("abc"))));
         assertEquals("equals [\"</script>\", \" def\\\"\"]", generator.format(Pair.of(GeneratorWord.Operator.EQUALS, List.of("</script>", " def\""))));
     }
-
-//    @Test
-//    public void testParse() {
-//        assertEquals(Pair.of(GeneratorWord.Operator.CONTAINS, List.of("abc")), generator.parse("contains [\"abc\"]"));
-//        assertEquals(Pair.of(GeneratorWord.Operator.EQUALS, List.of("</script>", " def\"")), generator.parse("equals [\"</script>\", \" def\\\"\"]"));
-//    }
 }

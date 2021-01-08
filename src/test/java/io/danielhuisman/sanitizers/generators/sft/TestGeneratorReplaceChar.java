@@ -73,16 +73,4 @@ public class TestGeneratorReplaceChar {
                 )
         ));
     }
-
-//    @Test
-//    public void testParse() {
-//        assertEquals(List.of(
-//                Pair.of(new CharPred('a'), "b")
-//        ), generator.parse("[[a] -> \"b\"]"));
-//
-//        assertEquals(List.of(
-//                Pair.of(new CharPred('a', 'z'), "_"),
-//                Pair.of(new CharPred('"'), "'")
-//        ), generator.parse("[[a-z] -> \"_\", [\\\"] -> \"'\"]"));
-//    }
 }

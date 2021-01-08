@@ -80,9 +80,4 @@ public class GeneratorLengthList extends SFAGenerator<Collection<Collection<Pair
                         .collect(Collectors.joining(", "))))
                 .collect(Collectors.joining(", ")));
     }
-
-    @Override
-    public Collection<Collection<Pair<GeneratorRange.Operator, Integer>>> parse(String input) {
-        return null;
-    }
 }

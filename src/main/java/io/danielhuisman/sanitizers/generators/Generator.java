@@ -15,6 +15,4 @@ public abstract class Generator<I, O extends AutomatonWrapper<?, ?>> {
     public abstract Collection<Pair<String, O>> generateExamples() throws TimeoutException;
 
     public abstract String format(I input);
-
-    public abstract I parse(String input);
 }

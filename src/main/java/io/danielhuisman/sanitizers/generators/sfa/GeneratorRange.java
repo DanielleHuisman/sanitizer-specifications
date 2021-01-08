@@ -91,22 +91,4 @@ public class GeneratorRange extends SFAGenerator<Triple<GeneratorRange.Operator,
     public String format(Triple<Operator, Integer, CharPred> input) {
         return String.format("%s %d %s", input.getLeft().name().toLowerCase(), input.getMiddle(), input.getRight().toString());
     }
-
-    @Override
-    public Triple<Operator, Integer, CharPred> parse(String input) {
-//        String[] split = input.split(" ");
-//        if (split.length == 2) {
-//            Optional<Operator> operator = Arrays.stream(Operator.values()).filter(op -> op.name().equalsIgnoreCase(split[0])).findFirst();
-//            if (operator.isPresent()) {
-//                try {
-//                    int length = Integer.parseInt(split[1]);
-//
-//                    return Pair.of(operator.get(), length);
-//                } catch (NumberFormatException e) {
-//                    return null;
-//                }
-//            }
-//        }
-        return null;
-    }
 }

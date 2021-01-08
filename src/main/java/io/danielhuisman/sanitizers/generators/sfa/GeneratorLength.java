@@ -42,25 +42,4 @@ public class GeneratorLength extends SFAGenerator<Pair<GeneratorRange.Operator, 
     public String format(Pair<GeneratorRange.Operator, Integer> input) {
         return String.format("%s %d", input.getLeft().name().toLowerCase(), input.getRight());
     }
-
-    @Override
-    public Pair<GeneratorRange.Operator, Integer> parse(String input) {
-        String[] split = input.split(" ");
-        if (split.length == 2) {
-            Optional<GeneratorRange.Operator> operator = Arrays.stream(GeneratorRange.Operator.values())
-                    .filter(op -> op.name().equalsIgnoreCase(split[0]))
-                    .findFirst();
-
-            if (operator.isPresent()) {
-                try {
-                    int length = Integer.parseInt(split[1]);
-
-                    return Pair.of(operator.get(), length);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-        }
-        return null;
-    }
 }

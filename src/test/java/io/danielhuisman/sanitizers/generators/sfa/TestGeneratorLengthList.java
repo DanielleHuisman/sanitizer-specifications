@@ -1,7 +1,5 @@
 package io.danielhuisman.sanitizers.generators.sfa;
 
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorLengthList;
-import io.danielhuisman.sanitizers.generators.sfa.GeneratorRange;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -92,23 +90,4 @@ public class TestGeneratorLengthList {
                 )
         )));
     }
-
-//    @Test
-//    public void testParse() {
-//        assertEquals(List.of(
-//                List.of(
-//                        Pair.of(GeneratorRange.Operator.EQUALS, 1)
-//                )
-//        ), generator.parse("[[equals 1]]"));
-//
-//        assertEquals(List.of(
-//                List.of(
-//                        Pair.of(GeneratorRange.Operator.GREATER_THAN, 1),
-//                        Pair.of(GeneratorRange.Operator.LESS_THAN, 4)
-//                ),
-//                List.of(
-//                        Pair.of(GeneratorRange.Operator.GREATER_THAN, 8)
-//                )
-//        ), generator.parse("[[greater_than 1, less_than 4], [greater_than 8]]"));
-//    }
 }

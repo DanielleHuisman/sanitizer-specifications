@@ -68,9 +68,4 @@ public class GeneratorWordList extends SFAGenerator<Pair<GeneratorWord.Operator,
                 .stream()
                 .map(s -> String.format("\"%s\"", StringEscapeUtils.escapeJava(s))).collect(Collectors.joining(", ")));
     }
-
-    @Override
-    public Pair<GeneratorWord.Operator, Collection<String>> parse(String input) {
-        return null;
-    }
 }

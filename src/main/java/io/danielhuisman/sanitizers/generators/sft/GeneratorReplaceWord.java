@@ -79,9 +79,4 @@ public class GeneratorReplaceWord extends SFTStringGenerator<Pair<String, String
     public String format(Pair<String, String> input) {
         return String.format("\"%s\" -> \"%s\"", StringEscapeUtils.escapeJava(input.getLeft()), StringEscapeUtils.escapeJava(input.getRight()));
     }
-
-    @Override
-    public Pair<String, String> parse(String input) {
-        return null;
-    }
 }

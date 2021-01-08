@@ -62,9 +62,4 @@ public class GeneratorRangeList extends SFAGenerator<Collection<Pair<CharPred, I
                 .map(inputRange -> String.format("%s x%d", inputRange.getLeft().toString(), inputRange.getRight()))
                 .collect(Collectors.joining(", ")));
     }
-
-    @Override
-    public Collection<Pair<CharPred, Integer>> parse(String input) {
-        return null;
-    }
 }

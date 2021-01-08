@@ -219,7 +219,7 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
 
     @Override
     public String format(Regex input) {
-        return null;
+        return String.format("regex %s", input.toRegex());
     }
 
     @Override
