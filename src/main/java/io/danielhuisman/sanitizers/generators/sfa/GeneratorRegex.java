@@ -221,9 +221,4 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
     public String format(Regex input) {
         return String.format("regex %s", input.toRegex());
     }
-
-    @Override
-    public Regex parse(String input) {
-        return null;
-    }
 }

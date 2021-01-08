@@ -10,6 +10,7 @@ fragment DIGIT: [0-9];
 fragment DASH: [-_];
 
 // Primitives
+BOOLEAN: 'true' | 'false';
 INTEGER: DIGIT+;
 CHAR: '\'' ( '\\\'' | '\\'? . ) '\'';
 STRING: '"' ( '\\"' | '\\\\' | ~[\\"\r\n] )* '"';
@@ -49,7 +50,8 @@ identifier: IDENTIFIER;
 
 // Primitives
 primitive
-    : INTEGER                                           # primitiveInteger
+    : BOOLEAN                                           # primitiveBoolean
+    | INTEGER                                           # primitiveInteger
     | CHAR                                              # primitiveCharacter
     | STRING                                            # primitiveString
     | REGEX                                             # primitiveRegex

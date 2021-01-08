@@ -196,6 +196,11 @@ public class LanguageListener extends LanguageBaseListener {
     }
 
     @Override
+    public void exitPrimitiveBoolean(LanguageParser.PrimitiveBooleanContext ctx) {
+        set(ctx, new Primitive<>(Boolean.class, Boolean.parseBoolean(ctx.getText())));
+    }
+
+    @Override
     public void exitPrimitiveInteger(LanguageParser.PrimitiveIntegerContext ctx) {
         set(ctx, new Primitive<>(Integer.class, Integer.parseInt(ctx.getText())));
     }

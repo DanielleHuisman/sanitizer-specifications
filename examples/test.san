@@ -91,6 +91,20 @@ accepts trim ""
 accepts trim "abcd"
 accepts trim "abcdef"
 
+pad1 = pad (5, "012", false)
+export pad1
+outputs pad1 "" "01201"
+outputs pad1 "a" "a0120"
+outputs pad1 "abc" "abc01"
+outputs pad1 "abcde" "abcde"
+outputs pad1 "abcdefg" "abcdefg"
+
+pad2 = pad (3, " ", true)
+export pad2
+outputs pad2 "" "   "
+outputs pad2 "a" "a  "
+outputs pad2 "aaaaa" "aaa"
+
 swapAB = replace-char [
     ('a', "b"),
     ('b', "a")
