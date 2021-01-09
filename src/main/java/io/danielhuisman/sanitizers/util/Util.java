@@ -1,5 +1,8 @@
 package io.danielhuisman.sanitizers.util;
 
+import theory.characters.CharConstant;
+import theory.characters.CharFunc;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,6 +15,10 @@ public class Util {
 
     public static List<Character> toCharList(String s) {
         return s.chars().mapToObj((c) -> (char) c).collect(Collectors.toList());
+    }
+
+    public static List<CharFunc> toCharFuncList(String s) {
+        return s.chars().mapToObj((c) -> new CharConstant((char) c)).collect(Collectors.toList());
     }
 
     @FunctionalInterface

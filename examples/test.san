@@ -109,13 +109,13 @@ outputs pad2 "" "   "
 outputs pad2 "a" "a  "
 outputs pad2 "aaaaa" "aaa"
 
-swapAB = replace-char [
+swap_ab = replace-char [
     ('a', "b"),
     ('b', "a")
 ]
 
-export swapAB
-outputs swapAB "abc" "bac"
+export swap_ab
+outputs swap_ab "abc" "bac"
 
 html_entities = replace-char [
     ('&', "&amp;"),
@@ -126,3 +126,20 @@ html_entities = replace-char [
 export html_entities
 outputs html_entities "<script>" "&lt;script&gt;"
 outputs html_entities "&amp;" "&amp;amp;"
+
+abc_to_def = replace-word ("abc", "def")
+export abc_to_def
+outputs abc_to_def "abc1" "def1"
+outputs abc_to_def "abcabc" "defdef"
+outputs abc_to_def "ababc" "abdef"
+
+html_amp = replace-word ("&amp;", "")
+export html_amp
+outputs html_amp "abc" "abc"
+outputs html_amp "&amp;" ""
+outputs html_amp "&amp " "&amp "
+outputs html_amp "&amp;abc&amp;2" "abc2"
+
+// Unfortunately this way of replacing words does not support partial matches at the end
+// outputs html_amp "&amp;z&amp" "z&amp"
+outputs html_amp "&amp;z&amp" "z"
