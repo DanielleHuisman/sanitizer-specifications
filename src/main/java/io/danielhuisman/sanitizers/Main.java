@@ -7,9 +7,14 @@ import io.danielhuisman.sanitizers.generators.sfa.GeneratorLength;
 import io.danielhuisman.sanitizers.generators.sfa.GeneratorRange;
 import io.danielhuisman.sanitizers.generators.sfa.GeneratorWord;
 import io.danielhuisman.sanitizers.generators.sfa.GeneratorWordList;
+import io.danielhuisman.sanitizers.generators.sft.GeneratorReplaceChar;
+import io.danielhuisman.sanitizers.generators.sft.GeneratorReplaceWord;
+import io.danielhuisman.sanitizers.generators.sft.GeneratorTrim;
 import io.danielhuisman.sanitizers.sfa.SFAWrapper;
+import io.danielhuisman.sanitizers.sft.SFTWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
+import theory.characters.CharPred;
 
 import java.io.IOException;
 import java.util.List;
@@ -87,6 +92,60 @@ public class Main {
             System.out.println("abc_def");
             for (String word : words) {
                 System.out.println(word + ": " + sfa.accepts(word));
+            }
+            System.out.println();
+        } catch (TimeoutException | IOException e) {
+            e.printStackTrace();
+        }
+
+        // Test with SFT composition
+        try {
+            GeneratorTrim generatorTrim = new GeneratorTrim();
+            GeneratorReplaceChar generatorReplaceChar = new GeneratorReplaceChar();
+            GeneratorReplaceWord generatorReplaceWord = new GeneratorReplaceWord();
+
+            SFTWrapper sft1 = SFTWrapper.compose(
+                    List.of(
+                            generatorReplaceChar.generate(List.of(Pair.of(new CharPred('&'), "&amp;"))),
+                            generatorReplaceChar.generate(List.of(Pair.of(new CharPred('<'), "&lt;"))),
+                            generatorTrim.generate(3)
+                    )
+            );
+            sft1.createDotFile("amp_lt_trim_3", "compose/");
+
+            SFTWrapper sft2 = SFTWrapper.compose(
+                    List.of(
+                            generatorTrim.generate(3),
+                            generatorReplaceChar.generate(List.of(Pair.of(new CharPred('&'), "&amp;"))),
+                            generatorReplaceChar.generate(List.of(Pair.of(new CharPred('<'), "&lt;")))
+                    )
+            );
+            sft2.createDotFile("trim_3_amp_lt", "compose/");
+
+            String[] words = {"a", "&", "<", "&<", "test", "&test<"};
+            System.out.println("amp_lt_trim_3");
+            for (String word : words) {
+                System.out.println(word + ": " + sft1.execute(word));
+            }
+            System.out.println();
+            System.out.println("trim_3_amp_lt");
+            for (String word : words) {
+                System.out.println(word + ": " + sft2.execute(word));
+            }
+            System.out.println();
+
+            SFTWrapper sft3 = SFTWrapper.compose(
+                    List.of(
+                            generatorReplaceWord.generate(Pair.of("abc", "def")),
+                            generatorReplaceWord.generate(Pair.of("34", "2"))
+                    )
+            );
+            sft3.createDotFile("abc_to_def_and_34_to_2", "compose/");
+
+            words = new String[] {"abc", "34", "abc34", "ab34", "34ab", "3434abc", "3ab4cab"};
+            System.out.println("abc_to_def_and_34_to_2");
+            for (String word : words) {
+                System.out.println(word + ": " + sft3.execute(word));
             }
             System.out.println();
         } catch (TimeoutException | IOException e) {

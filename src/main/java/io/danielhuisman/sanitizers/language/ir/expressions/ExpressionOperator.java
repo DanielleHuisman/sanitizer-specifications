@@ -1,6 +1,7 @@
 package io.danielhuisman.sanitizers.language.ir.expressions;
 
 import io.danielhuisman.sanitizers.automaton.AutomatonWrapper;
+import io.danielhuisman.sanitizers.sft.SFTWrapper;
 import io.danielhuisman.sanitizers.util.Util;
 import io.danielhuisman.sanitizers.language.ir.Memory;
 import io.danielhuisman.sanitizers.language.ir.Operator;
@@ -45,8 +46,10 @@ public class ExpressionOperator extends Expression {
             case AND:
                 if (automatons.get(0) instanceof SFAWrapper) {
                     return ((SFAWrapper) automatons.get(0)).intersectionWith((SFAWrapper) automatons.get(1)).minimize().cleanUp();
+                } else if (automatons.get(0) instanceof SFTWrapper) {
+                    return ((SFTWrapper) automatons.get(0)).composeWith((SFTWrapper) automatons.get(1));
                 }
-                throw new RuntimeException("Automatons are not SFAs");
+                throw new RuntimeException("Automatons are not SFAs or SFTs");
             case OR:
                 if (automatons.get(0) instanceof SFAWrapper) {
                     return ((SFAWrapper) automatons.get(0)).unionWith((SFAWrapper) automatons.get(1)).minimize().cleanUp();

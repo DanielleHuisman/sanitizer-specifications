@@ -1,6 +1,6 @@
 package io.danielhuisman.sanitizers.generators.sft;
 
-import io.danielhuisman.sanitizers.sft.string.SFTStringWrapper;
+import io.danielhuisman.sanitizers.sft.SFTWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.sat4j.specs.TimeoutException;
@@ -45,7 +45,7 @@ public class TestGeneratorReplaceChar {
     }
 
     private void test(Collection<Pair<CharPred, String>> input, Map<String, String> output) throws TimeoutException {
-        SFTStringWrapper sft = generator.generate(input);
+        SFTWrapper sft = generator.generate(input);
 
         for (var entry : output.entrySet()) {
             String word = entry.getKey();

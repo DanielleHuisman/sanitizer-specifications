@@ -1,12 +1,12 @@
 package io.danielhuisman.sanitizers.generators.sft;
 
-import io.danielhuisman.sanitizers.sft.string.SFTStringWrapper;
-import io.danielhuisman.sanitizers.sft.string.StringConstant;
-import io.danielhuisman.sanitizers.sft.string.StringFunc;
-import io.danielhuisman.sanitizers.sft.string.StringIdentity;
+import io.danielhuisman.sanitizers.sft.SFTWrapper;
+import io.danielhuisman.sanitizers.util.Util;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
+import theory.characters.CharFunc;
+import theory.characters.CharOffset;
 import theory.characters.CharPred;
 import transducers.sft.SFTInputMove;
 import transducers.sft.SFTMove;
@@ -14,7 +14,7 @@ import transducers.sft.SFTMove;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GeneratorReplaceChar extends SFTStringGenerator<Collection<Pair<CharPred, String>>> {
+public class GeneratorReplaceChar extends SFTGenerator<Collection<Pair<CharPred, String>>> {
 
     @Override
     public String getName() {
@@ -22,9 +22,9 @@ public class GeneratorReplaceChar extends SFTStringGenerator<Collection<Pair<Cha
     }
 
     @Override
-    public SFTStringWrapper generate(Collection<Pair<CharPred, String>> input) throws TimeoutException {
-        List<SFTMove<CharPred, StringFunc, String>> transitions = new LinkedList<>();
-        Map<Integer, Set<List<String>>> finalStatesAndTails = new HashMap<>();
+    public SFTWrapper generate(Collection<Pair<CharPred, String>> input) throws TimeoutException {
+        List<SFTMove<CharPred, CharFunc, Character>> transitions = new LinkedList<>();
+        Map<Integer, Set<List<Character>>> finalStatesAndTails = new HashMap<>();
 
         CharPred combinedRange = null;
         for (Pair<CharPred, String> replacement : input) {
@@ -35,29 +35,25 @@ public class GeneratorReplaceChar extends SFTStringGenerator<Collection<Pair<Cha
             if (combinedRange == null) {
                 combinedRange = range;
             } else {
-                combinedRange = SFTStringWrapper.ALGEBRA.MkOr(combinedRange, range);
+                combinedRange = SFTWrapper.ALGEBRA.MkOr(combinedRange, range);
             }
 
             // Add transition to self for the range and output the replacement string
-            List<StringFunc> output = new LinkedList<>();
-            output.add(new StringConstant(replacementOutput));
-            transitions.add(new SFTInputMove<>(0, 0, range, output));
+            transitions.add(new SFTInputMove<>(0, 0, range, Util.toCharFuncList(replacementOutput)));
         }
 
         // Add transition to self for characters whose output is unchanged
-        List<StringFunc> output = new LinkedList<>();
-        output.add(new StringIdentity());
-        transitions.add(new SFTInputMove<>(0, 0, SFTStringWrapper.ALGEBRA.MkNot(combinedRange), output));
+        transitions.add(new SFTInputMove<>(0, 0, SFTWrapper.ALGEBRA.MkNot(combinedRange), List.of(CharOffset.IDENTITY)));
 
         // Mark the only state as final
         finalStatesAndTails.put(0, new HashSet<>());
 
-        return new SFTStringWrapper(transitions, 0, finalStatesAndTails);
+        return new SFTWrapper(transitions, 0, finalStatesAndTails);
     }
 
     @Override
-    public Collection<Pair<String, SFTStringWrapper>> generateExamples() throws TimeoutException {
-        List<Pair<String, SFTStringWrapper>> examples = new LinkedList<>();
+    public Collection<Pair<String, SFTWrapper>> generateExamples() throws TimeoutException {
+        List<Pair<String, SFTWrapper>> examples = new LinkedList<>();
 
         examples.add(Pair.of("a_b_swap", generate(
                 List.of(

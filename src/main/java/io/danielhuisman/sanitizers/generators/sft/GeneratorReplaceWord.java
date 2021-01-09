@@ -1,7 +1,6 @@
 package io.danielhuisman.sanitizers.generators.sft;
 
 import io.danielhuisman.sanitizers.sft.SFTWrapper;
-import io.danielhuisman.sanitizers.sft.string.SFTStringWrapper;
 import io.danielhuisman.sanitizers.util.Util;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,8 +41,8 @@ public class GeneratorReplaceWord extends SFTGenerator<Pair<String, String>> {
             // Add transition back to the start if the character does not match this character or the first character
             List<CharFunc> output = Util.toCharFuncList(word.substring(0, i));
             output.add(CharOffset.IDENTITY);
-            transitions.add(new SFTInputMove<>(i,0, SFTStringWrapper.ALGEBRA.MkNot(
-                    SFTStringWrapper.ALGEBRA.MkOr(new CharPred(word.charAt(0)), new CharPred(word.charAt(i)))
+            transitions.add(new SFTInputMove<>(i,0, SFTWrapper.ALGEBRA.MkNot(
+                    SFTWrapper.ALGEBRA.MkOr(new CharPred(word.charAt(0)), new CharPred(word.charAt(i)))
             ), output));
 
             // Add transition back to the second state if the character matches the first character
@@ -57,7 +56,7 @@ public class GeneratorReplaceWord extends SFTGenerator<Pair<String, String>> {
         }
 
         // Add transitions from the last state back to the first and second states
-        transitions.add(new SFTInputMove<>(word.length(), 0, SFTStringWrapper.ALGEBRA.MkNot(new CharPred(word.charAt(0))), List.of(CharOffset.IDENTITY)));
+        transitions.add(new SFTInputMove<>(word.length(), 0, SFTWrapper.ALGEBRA.MkNot(new CharPred(word.charAt(0))), List.of(CharOffset.IDENTITY)));
         transitions.add(new SFTInputMove<>(word.length(), 1, new CharPred(word.charAt(0)), List.of()));
 
         // Mark last state as final

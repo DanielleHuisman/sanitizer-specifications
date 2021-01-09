@@ -143,3 +143,15 @@ outputs html_amp "&amp;abc&amp;2" "abc2"
 // Unfortunately this way of replacing words does not support partial matches at the end
 // outputs html_amp "&amp;z&amp" "z&amp"
 outputs html_amp "&amp;z&amp" "z"
+
+trim_3_no_a = replace-char [('a', "")] and trim 3
+export trim_3_no_a
+outputs trim_3_no_a "abcde" "bcd"
+outputs trim_3_no_a "aaaaa" ""
+outputs trim_3_no_a "aaabb" "bb"
+
+no_a_trim_3 =  trim 3 and replace-char [('a', "")]
+export no_a_trim_3
+outputs no_a_trim_3 "abcde" "bc"
+outputs trim_3_no_a "aaaaa" ""
+outputs no_a_trim_3 "aaabb" ""
