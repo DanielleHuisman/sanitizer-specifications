@@ -70,6 +70,6 @@ public class GeneratorPad extends SFTGenerator<Triple<Integer, String, Boolean>>
 
     @Override
     public String format(Triple<Integer, String, Boolean> input) {
-        return String.format("pad %d \"%s\" %s", input.getLeft(), StringEscapeUtils.escapeJava(input.getMiddle()), input.getRight() ? "no trim" : "trim");
+        return String.format("pad %d \"%s\" %s", input.getLeft(), StringEscapeUtils.escapeJava(input.getMiddle()), input.getRight() ? "trim" : "no trim");
     }
 }
