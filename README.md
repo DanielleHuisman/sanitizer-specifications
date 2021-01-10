@@ -1,6 +1,6 @@
 # Generating Specifications to Verify the Correctness of Sanitizers
 
-Bachelor thesis for University of Twente.
+Bachelor thesis for Technical Computer Science at University of Twente.
 
 ## Libraries
 - [Symbolic Automata Library](https://github.com/lorisdanto/symbolicautomata)

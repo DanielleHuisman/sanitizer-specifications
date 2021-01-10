@@ -52,9 +52,7 @@ public class TestGeneratorReplaceChar {
             String match = entry.getValue();
 
             assertTrue(sft.accepts(word), String.format("%s should accept string \"%s\"", generator.format(input), word));
-
-            String result = sft.execute(word);
-            assertEquals(match, result);
+            assertEquals(match, sft.execute(word), String.format("%s should output \"%s\" for \"%s\"", generator.format(input), match, word));
         }
     }
 

@@ -1,16 +1,16 @@
 package io.danielhuisman.sanitizers.generators.sft;
 
 import io.danielhuisman.sanitizers.sft.SFTWrapper;
+import io.danielhuisman.sanitizers.util.Util;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
-import theory.characters.CharConstant;
 import theory.characters.CharFunc;
 import theory.characters.CharPred;
 import transducers.sft.SFTInputMove;
 import transducers.sft.SFTMove;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GeneratorConstant extends SFTGenerator<String> {
 
@@ -24,11 +24,8 @@ public class GeneratorConstant extends SFTGenerator<String> {
         List<SFTMove<CharPred, CharFunc, Character>> transitions = new LinkedList<>();
         Map<Integer, Set<List<Character>>> finalStatesAndTails = new HashMap<>();
 
-        // Convert input to character constants
-        List<CharFunc> chars = input.chars().mapToObj((c) -> new CharConstant((char) c)).collect(Collectors.toList());
-
         // Add transition with constant output
-        transitions.add(new SFTInputMove<>(0, 1, SFTWrapper.ALGEBRA.True(), chars));
+        transitions.add(new SFTInputMove<>(0, 1, SFTWrapper.ALGEBRA.True(), Util.toCharFuncList(input)));
 
         // Add true transition to self without output
         transitions.add(new SFTInputMove<>(1, 1, SFTWrapper.ALGEBRA.True(), List.of()));
@@ -44,12 +41,13 @@ public class GeneratorConstant extends SFTGenerator<String> {
         List<Pair<String, SFTWrapper>> examples = new LinkedList<>();
 
         examples.add(Pair.of("constant_cheese", generate("cheese")));
+        examples.add(Pair.of("constant_empty", generate("")));
 
         return examples;
     }
 
     @Override
     public String format(String input) {
-        return String.format("constant %s", input);
+        return String.format("constant \"%s\"", StringEscapeUtils.escapeJava(input));
     }
 }

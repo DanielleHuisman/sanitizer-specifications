@@ -2,6 +2,13 @@
 
 This project includes a simple domain-specific language (DSL) for generating and testing sanitizer specifications.
 
+- [Identifiers](#identifiers)
+- [Data types](#data-types)
+- [Expressions](#expressions)
+- [Operators](#operators)
+- [Statements](#statements)
+- [Additional information](#additional-information)
+
 ## Identifiers
 Identifiers are used to name variables and generators.
 An identifier consists of alphanumeric characters, dashes or underscores, but cannot start or end with a dash or underscore.
@@ -275,6 +282,6 @@ outputs abc_to_def "abc" "def"
 outputs no_script "te<script>st" "test"
 ```
 
-## References
+## Additional information
 - [Language grammar](../src/main/antlr/io/danielhuisman/sanitizers/language/grammar/Language.g4)
 - [Regex grammar](../src/main/antlr/io/danielhuisman/sanitizers/language/grammar/Regex.g4)
