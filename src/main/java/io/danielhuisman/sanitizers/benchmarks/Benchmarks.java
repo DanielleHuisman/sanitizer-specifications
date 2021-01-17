@@ -20,26 +20,26 @@ public class Benchmarks {
             BenchmarkGeneratorLength benchmarkLength = new BenchmarkGeneratorLength();
 //            benchmarkLength.benchmarkSpeed(0, 100000, 1000, 5, GeneratorRange.Operator.EQUALS);
 //            benchmarkLength.benchmarkSpeed(0, 100000, 1000, 5, GeneratorRange.Operator.GREATER_THAN_OR_EQUALS);
-            benchmarkLength.benchmarkSize(0, 1000, 1, GeneratorRange.Operator.GREATER_THAN_OR_EQUALS);
+            benchmarkLength.benchmarkSize("gte", 0, 1000, 1, GeneratorRange.Operator.GREATER_THAN_OR_EQUALS);
 
             BenchmarkGeneratorRange benchmarkRange = new BenchmarkGeneratorRange();
-            benchmarkRange.benchmarkSize(0, 1000, 1, Pair.of(
+            benchmarkRange.benchmarkSize("gte", 0, 1000, 1, Pair.of(
                     GeneratorRange.Operator.GREATER_THAN_OR_EQUALS, new CharPred('a', 'z')
             ));
 
             BenchmarkGeneratorWord benchmarkWord = new BenchmarkGeneratorWord();
-            benchmarkWord.benchmarkSize(0, 1000, 1, Pair.of(
+            benchmarkWord.benchmarkSize("contains",0, 1000, 1, Pair.of(
                     GeneratorWord.Operator.CONTAINS, Util.charRangeAsString('a', 'z')
             ));
 
             BenchmarkGeneratorTrim benchmarkTrim = new BenchmarkGeneratorTrim();
-            benchmarkTrim.benchmarkSize(0, 1000, 1, null);
+            benchmarkTrim.benchmarkSize("trim",0, 1000, 1, null);
 
             BenchmarkGeneratorPad benchmarkPad = new BenchmarkGeneratorPad();
-            benchmarkPad.benchmarkSize(0, 1000, 1, Pair.of(Util.charRangeAsString('a', 'z'), false));
+            benchmarkPad.benchmarkSize("a-z", 0, 1000, 1, Pair.of(Util.charRangeAsString('a', 'z'), false));
 
             BenchmarkGeneratorReplaceWord benchmarkReplaceWord = new BenchmarkGeneratorReplaceWord();
-            benchmarkReplaceWord.benchmarkSize(1, 1000, 1, Pair.of(
+            benchmarkReplaceWord.benchmarkSize("a-z",1, 1000, 1, Pair.of(
                     Util.charRangeAsString('a', 'z'), "replacement"
             ));
         } catch (TimeoutException e) {

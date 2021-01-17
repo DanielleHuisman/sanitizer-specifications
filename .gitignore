@@ -3,6 +3,7 @@
 bin/
 build/
 out/
+benchmarks/
 dot/
 
 *.class
