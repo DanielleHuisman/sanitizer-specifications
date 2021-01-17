@@ -6,6 +6,7 @@ import theory.characters.CharFunc;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Util {
 
@@ -19,6 +20,10 @@ public class Util {
 
     public static List<CharFunc> toCharFuncList(String s) {
         return s.chars().mapToObj((c) -> new CharConstant((char) c)).collect(Collectors.toList());
+    }
+
+    public static String charRangeAsString(char start, char end) {
+        return IntStream.rangeClosed(start, end).mapToObj((i) -> "" + (char) i).collect(Collectors.joining());
     }
 
     @FunctionalInterface

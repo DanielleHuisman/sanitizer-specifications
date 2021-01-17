@@ -16,14 +16,14 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
 
     public void benchmarkSize(int minimum, int maximum, int step, P parameter) throws TimeoutException {
         System.out.printf("=== Size benchmark of \"%s\" ===%n", generator.getName());
-        System.out.printf("Parameter: %s%n%n", parameter.toString());
+        System.out.printf("Parameter: %s%n%n", parameter == null ? "null" : parameter.toString());
 
         for (int index = minimum; index <= maximum; index += step) {
             var automaton = generator.generate(generate(parameter, index));
             int states = automaton.getAutomaton().getStates().size();
             int transitions = automaton.getAutomaton().getMoves().size();
 
-            System.out.printf("%d: %d states, %d transitions %n", index, states, transitions);
+            System.out.printf("[%s] %d: %d states, %d transitions %n", generator.getName(), index, states, transitions);
         }
 
         System.out.println();
@@ -31,7 +31,7 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
 
     public void benchmarkSpeed(int minimum, int maximum, int step, int tries, P parameter) throws TimeoutException {
         System.out.printf("=== Speed benchmark of \"%s\" ===%n", generator.getName());
-        System.out.printf("Parameter: %s%n%n", parameter.toString());
+        System.out.printf("Parameter: %s%n%n", parameter == null ? "null" : parameter.toString());
 
         long start;
         long end;
@@ -49,7 +49,7 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
                 total += difference;
             }
 
-            System.out.printf("%d: %f ms%n", index, (total / (long) tries) / 1_000_000F);
+            System.out.printf("[%s] %d: %f ms%n", generator.getName(), index, (total / (long) tries) / 1_000_000F);
         }
 
         System.out.println();
