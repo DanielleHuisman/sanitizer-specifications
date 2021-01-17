@@ -56,8 +56,10 @@ public class GeneratorReplaceWord extends SFTGenerator<Pair<String, String>> {
         }
 
         // Add transitions from the last state back to the first and second states
-        transitions.add(new SFTInputMove<>(word.length(), 0, SFTWrapper.ALGEBRA.MkNot(new CharPred(word.charAt(0))), List.of(CharOffset.IDENTITY)));
-        transitions.add(new SFTInputMove<>(word.length(), 1, new CharPred(word.charAt(0)), List.of()));
+        if (word.length() > 0) {
+            transitions.add(new SFTInputMove<>(word.length(), 0, SFTWrapper.ALGEBRA.MkNot(new CharPred(word.charAt(0))), List.of(CharOffset.IDENTITY)));
+            transitions.add(new SFTInputMove<>(word.length(), 1, new CharPred(word.charAt(0)), List.of()));
+        }
 
         // Mark last state as final
         finalStatesAndTails.put(word.length(), new HashSet<>());
