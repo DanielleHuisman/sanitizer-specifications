@@ -211,7 +211,7 @@ public class GeneratorRegex extends SFAGenerator<Regex> {
         examples.add(Pair.of("complex_1", generate(RegexLanguage.parseString("[a-z]+0?"))));
         examples.add(Pair.of("complex_2", generate(RegexLanguage.parseString("(45|_{3})+"))));
         examples.add(Pair.of("complex_3", generate(RegexLanguage.parseString("[a-z]+0?|2(9{1,}|(45|_{3})+)|&"))));
-        examples.add(Pair.of("email_1", generate(RegexLanguage.parseString("[A-Z0-9._%\\+\\-]+@[A-Z0-9.\\-]+\\.[A-Z]{2,}"))));
+        examples.add(Pair.of("email_1", generate(RegexLanguage.parseString("[a-zA-Z0-9._%\\+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"))));
         examples.add(Pair.of("email_2", generate(RegexLanguage.parseString("[a-zA-Z0-9._%\\+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,63}"))));
 
         return examples;

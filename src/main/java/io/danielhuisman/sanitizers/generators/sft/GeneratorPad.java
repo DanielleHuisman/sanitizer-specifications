@@ -62,6 +62,7 @@ public class GeneratorPad extends SFTGenerator<Triple<Integer, String, Boolean>>
     public Collection<Pair<String, SFTWrapper>> generateExamples() throws TimeoutException {
         List<Pair<String, SFTWrapper>> examples = new LinkedList<>();
 
+        examples.add(Pair.of("pad_2_ab_no_trim", generate(Triple.of(2, "ab", false))));
         examples.add(Pair.of("pad_5_a_trim", generate(Triple.of(5, "a", true))));
         examples.add(Pair.of("pad_5_ab_no_trim", generate(Triple.of(5, "ab", false))));
 

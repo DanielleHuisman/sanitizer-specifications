@@ -55,6 +55,12 @@ public class GeneratorReplaceChar extends SFTGenerator<Collection<Pair<CharPred,
     public Collection<Pair<String, SFTWrapper>> generateExamples() throws TimeoutException {
         List<Pair<String, SFTWrapper>> examples = new LinkedList<>();
 
+        examples.add(Pair.of("replace_a_b", generate(
+                List.of(
+                        Pair.of(new CharPred('a'), "b")
+                )
+        )));
+
         examples.add(Pair.of("a_b_swap", generate(
                 List.of(
                         Pair.of(new CharPred('a'), "b"),

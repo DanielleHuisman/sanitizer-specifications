@@ -42,6 +42,7 @@ public class GeneratorTrim extends SFTGenerator<Integer> {
     public Collection<Pair<String, SFTWrapper>> generateExamples() throws TimeoutException {
         List<Pair<String, SFTWrapper>> examples = new LinkedList<>();
 
+        examples.add(Pair.of("trim_1", generate(1)));
         examples.add(Pair.of("trim_3", generate(3)));
 
         return examples;
