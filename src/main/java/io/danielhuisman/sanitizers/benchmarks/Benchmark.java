@@ -35,7 +35,7 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
         }
 
         System.out.println();
-        write(generator.getName(), name, sb.toString());
+        write(generator.getName(), name == null ? "size" : "size_" + name, sb.toString());
     }
 
     public void benchmarkSpeed(String name, int minimum, int maximum, int step, int tries, P parameter) throws TimeoutException {
@@ -53,8 +53,9 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
         for (int index = minimum; index <= maximum; index += step) {
             total = 0;
             for (int i = 0; i < tries; i++) {
+                var input = generate(parameter, index);
                 start = System.nanoTime();
-                generator.generate(generate(parameter, index));
+                generator.generate(input);
                 end = System.nanoTime();
 
                 difference = end - start;
@@ -67,13 +68,13 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
         }
 
         System.out.println();
-        write(generator.getName(), name, sb.toString());
+        write(generator.getName(), name == null ? "speed" : "speed_" + name, sb.toString());
     }
 
     private static void write(String path, String name, String content) {
         try {
             Files.createDirectories(Paths.get("benchmarks/" + path));
-            Files.writeString(Paths.get("benchmarks/" + path + "/" + (name == null ? "" : name) + ".csv"), content);
+            Files.writeString(Paths.get("benchmarks/" + path + "/" + name + ".csv"), content);
         } catch (IOException e) {
             e.printStackTrace();
         }

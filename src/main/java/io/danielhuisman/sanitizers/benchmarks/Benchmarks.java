@@ -18,22 +18,28 @@ public class Benchmarks {
     public static void main(String[] args) {
         try {
             BenchmarkGeneratorLength benchmarkLength = new BenchmarkGeneratorLength();
+            for (var operator : GeneratorRange.Operator.values()) {
+                benchmarkLength.benchmarkSize(operator.name().toLowerCase(), 0, 1000, 1, operator);
+            }
 //            benchmarkLength.benchmarkSpeed(0, 100000, 1000, 5, GeneratorRange.Operator.EQUALS);
 //            benchmarkLength.benchmarkSpeed(0, 100000, 1000, 5, GeneratorRange.Operator.GREATER_THAN_OR_EQUALS);
-            benchmarkLength.benchmarkSize("gte", 0, 1000, 1, GeneratorRange.Operator.GREATER_THAN_OR_EQUALS);
 
             BenchmarkGeneratorRange benchmarkRange = new BenchmarkGeneratorRange();
-            benchmarkRange.benchmarkSize("gte", 0, 1000, 1, Pair.of(
-                    GeneratorRange.Operator.GREATER_THAN_OR_EQUALS, new CharPred('a', 'z')
-            ));
+            for (var operator : GeneratorRange.Operator.values()) {
+                benchmarkRange.benchmarkSize("a-z_" + operator.name().toLowerCase(), 0, 1000, 1, Pair.of(
+                        operator, new CharPred('a', 'z')
+                ));
+            }
 
             BenchmarkGeneratorWord benchmarkWord = new BenchmarkGeneratorWord();
-            benchmarkWord.benchmarkSize("contains",0, 1000, 1, Pair.of(
-                    GeneratorWord.Operator.CONTAINS, Util.charRangeAsString('a', 'z')
-            ));
+            for (var operator : GeneratorWord.Operator.values()) {
+                benchmarkWord.benchmarkSize("a-z_" + operator.name().toLowerCase(), 0, 1000, 1, Pair.of(
+                        operator, Util.charRangeAsString('a', 'z')
+                ));
+            }
 
             BenchmarkGeneratorTrim benchmarkTrim = new BenchmarkGeneratorTrim();
-            benchmarkTrim.benchmarkSize("trim",0, 1000, 1, null);
+            benchmarkTrim.benchmarkSize(null,0, 1000, 1, null);
 
             BenchmarkGeneratorPad benchmarkPad = new BenchmarkGeneratorPad();
             benchmarkPad.benchmarkSize("a-z", 0, 1000, 1, Pair.of(Util.charRangeAsString('a', 'z'), false));
