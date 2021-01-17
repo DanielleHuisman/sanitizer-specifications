@@ -33,6 +33,7 @@ public class CharacterClass {
         }
     }
 
+    public static final List<Range> RANGES_DOT = List.of(new Range('\u0000', '\uffff'));
     public static final List<Range> RANGES_WORD = List.of(new Range('A', 'Z'), new Range('a', 'z'), new Range('0', '9'), new Range('_', '_'));
     public static final List<Range> RANGES_DIGIT = List.of(new Range('0', '9'));
     public static final List<Range> RANGES_WHITESPACE = List.of(
@@ -57,17 +58,22 @@ public class CharacterClass {
     }
 
     public CharacterClass(String specialCharacter) {
-        this.type = Character.isUpperCase(specialCharacter.charAt(1)) ? Type.NEGATED_SET : Type.SET;
+        if (specialCharacter.equals(".")) {
+            this.type = Type.SET;
+            this.ranges = RANGES_DOT;
+        } else {
+            this.type = Character.isUpperCase(specialCharacter.charAt(1)) ? Type.NEGATED_SET : Type.SET;
 
-        switch (specialCharacter.toLowerCase().charAt(1)) {
-            case 'w':
-                this.ranges = RANGES_WORD;
-            case 'd':
-                this.ranges = RANGES_DIGIT;
-            case 's':
-                this.ranges = RANGES_WHITESPACE;
-            default: {
-                throw new IllegalStateException(String.format("Unknown special character \"%s\"", specialCharacter));
+            switch (specialCharacter.toLowerCase().charAt(1)) {
+                case 'w':
+                    this.ranges = RANGES_WORD;
+                case 'd':
+                    this.ranges = RANGES_DIGIT;
+                case 's':
+                    this.ranges = RANGES_WHITESPACE;
+                default: {
+                    throw new IllegalStateException(String.format("Unknown special character \"%s\"", specialCharacter));
+                }
             }
         }
     }
