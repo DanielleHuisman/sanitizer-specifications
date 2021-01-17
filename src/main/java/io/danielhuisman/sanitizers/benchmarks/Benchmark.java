@@ -43,7 +43,7 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
         System.out.printf("Parameter: %s%n%n", parameter == null ? "null" : parameter.toString());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Number,States,Transitions\n");
+        sb.append("Number,Time (average of tries),Time (total of tries)\n");
 
         long start;
         long end;
@@ -55,16 +55,20 @@ public abstract class Benchmark<I, O extends AutomatonWrapper<?, ?>, P> {
             for (int i = 0; i < tries; i++) {
                 var input = generate(parameter, index);
                 start = System.nanoTime();
-                generator.generate(input);
+                var automaton = generator.generate(input);
                 end = System.nanoTime();
+
+                automaton.execute("");
 
                 difference = end - start;
                 total += difference;
             }
 
-            float time = (total / (float) tries) / 1_000_000F;
-            System.out.printf("[%s] %d: %f ms%n", generator.getName(), index, time);
-            sb.append(String.format("%d,%f\n", index, time));
+            float timeAverage = (total / (float) tries) / 1_000_000F;
+            float timeTotal = total / 1_000_000F;
+            System.out.printf("[%s] %d: %f ms average of %d tries, %f ms total of %d tries%n",
+                    generator.getName(), index, timeAverage, tries, timeTotal, tries);
+            sb.append(String.format("%d,%f,%f\n", index, timeAverage, timeTotal));
         }
 
         System.out.println();
